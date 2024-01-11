@@ -1,9 +1,17 @@
 <script>
 	/** @type {Concept['level']} */
 	export let level
+
+	const level_descriptions = [
+		'Semantic Primitive',
+		'Semantic Molecule',
+		'Complex with an Insertion Rule',
+		'Complex without an Insertion Rule',
+		'Inexplicable'
+	]
 </script>
 
-<span class={`badge L${level} badge-lg`}>
+<span class={`badge L${level} badge-lg tooltip tooltip-left font-mono`} data-tip={level_descriptions[parseInt(level)]}>
 	L{level}
 </span>
 
