@@ -7,11 +7,13 @@
 		'Semantic Molecule',
 		'Complex with an Insertion Rule',
 		'Complex without an Insertion Rule',
-		'Inexplicable'
+		'Inexplicable',
 	]
+
+	$: description = level_descriptions[parseInt(level)] || ''
 </script>
 
-<span class={`badge L${level} badge-lg tooltip tooltip-left font-mono`} data-tip={level_descriptions[parseInt(level)]}>
+<span class={`badge L${level} badge-lg tooltip tooltip-left font-mono`} data-tip={description}>
 	L{level}
 </span>
 
