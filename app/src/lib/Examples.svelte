@@ -1,6 +1,7 @@
 <script>
 	import Icon from "@iconify/svelte"
 	import { PUBLIC_SOURCES_API_HOST } from '$env/static/public'
+	import Phase2 from "./Phase2.svelte"
 
 	/** @type {Concept['examples']} */
 	export let examples
@@ -13,13 +14,13 @@
 	 *
 	 * 	{
 	 * 		{											{
-	 * 			source: string							source: {
-	 *				book: string				=>					book: {
-	 *				chapter: number								'chapter:verse': unknown_encoding,
-	 *				verse: number								},
+	 * 			source: string								source: {
+	 *			book: string				=>					book: {
+	 *			chapter: number										'chapter:verse': unknown_encoding,
+	 *			verse: number									},
 	 * 		},												},
-	 *			unknown_encoding: string,			}
-	 *		}
+	 *		unknown_encoding: string,					}
+	 *	}
 	 *
 	 * @param {Record<string, Record<string, Record<string, string>>>} transformed_examples
 	 * @param {Concept['examples'][0]} example
@@ -62,17 +63,6 @@
 			selected_verse_json_encoded = ''
 	}
 
-	/**
-	 * @typedef {Object} SourceData
-	 * @property {string} type
-	 * @property {string} id_primary
-	 * @property {string} id_secondary
-	 * @property {string} id_tertiary
-	 * @property {string} phase_1_encoding
-	 * @property {string} phase_2_encoding
-	 * @property {string} comments
-	 * @property {string} notes
-	 */
 	/**
 	 * @param {Reference} reference
 	 *
@@ -143,6 +133,7 @@
 				{source.phase_1_encoding}
 			</p>
 
+			<Phase2 {source} />
 			<!-- TODO: need errorhandling here, i.e., :catch? -->
 		{/await}
 
