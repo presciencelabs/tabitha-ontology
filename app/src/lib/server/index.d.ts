@@ -26,7 +26,7 @@ interface Concept extends AugmentedConcept {}
 
 type CuratedExample = {
 	reference: Reference
-	semantic_representation: SemanticRepresentation
+	argument_phrases: ExampleArgumentStructure
 	sentence: string
 }
 
@@ -42,9 +42,9 @@ type Reference = {
 	verse: number
 }
 
-type SemanticRepresentation = Phrase[]
+type ExampleArgumentStructure = ExampleArgumentPhrase[]
 
-type Phrase = {
+type ExampleArgumentPhrase = {
 	part_of_speech: string
 	role: string
 	word: string
@@ -67,3 +67,5 @@ type SourceEntity = {
 	sense: string
     entity: string
 }
+
+type SemanticRepresentation = SourcsEntity[]

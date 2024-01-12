@@ -35,30 +35,30 @@ function transform_curated_examples(curated_examples_from_db) {
 	 */
 	function decode(encoded_example) {
 		const encoded_reference = encoded_example.split('|')[0] // '4,2,2,2'
-		const encoded_semantic_representation = encoded_example.match(/\|(.*)\|~/)?.[1] || '' // (NPp|baby|)|(VP|be|)|(APP|beautiful|)
+		const encoded_argument_phrases = encoded_example.match(/\|(.*)\|~/)?.[1] || '' // (NPp|baby|)|(VP|be|)|(APP|beautiful|)
 
 		return {
 			reference: decode_reference(encoded_reference),
-			semantic_representation: decode_semantic_representation(encoded_semantic_representation),
+			argument_phrases: decode_arguments(encoded_argument_phrases),
 			sentence: encoded_example.split('~')[1], // The baby was beautiful.
 		}
 
 		/**
-		 * @param {string} encoded_semantic_representation '(NPp|baby|)|(VP|be|)|(APP|beautiful|)'
+		 * @param {string} encoded_argument_phrases '(NPp|baby|)|(VP|be|)|(APP|beautiful|)'
 		 *
-		 * @returns {SemanticRepresentation}
+		 * @returns {ExampleArgumentStructure}
 		 */
-		function decode_semantic_representation(encoded_semantic_representation) {
-			const encoded_phrases = encoded_semantic_representation.match(/\([^)]+\|[^)]+\)/g) || [] // ['(NPp|baby|)', '(VP|be|)', '(APP|beautiful|)']
+		function decode_arguments(encoded_argument_phrases) {
+			const encoded_phrases = encoded_argument_phrases.match(/\([^)]+\|[^)]+\)/g) || [] // ['(NPp|baby|)', '(VP|be|)', '(APP|beautiful|)']
 
-			const semantic_representation = encoded_phrases.map(decode_phrase)
+			const argument_phrases = encoded_phrases.map(decode_phrase)
 
-			return semantic_representation
+			return argument_phrases
 
 			/**
 			 * @param {string} encoded_phrase '(NPp|baby|)'
 			 *
-			 * @returns {Phrase}
+			 * @returns {ExampleArgumentPhrase}
 			 */
 			function decode_phrase(encoded_phrase) {
 				const [type, word] = encoded_phrase.replace(/[()]/g, '').split('|') // ['NPp', 'baby']
