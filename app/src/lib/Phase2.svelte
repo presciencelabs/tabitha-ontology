@@ -43,7 +43,7 @@
     * 
     * @param {string} phase_2_encoding 
     * 
-    * @returns {SourceEntity[]}
+    * @returns {SemanticRepresentation}
     */
     function transform_phase_2_encoding(phase_2_encoding) {
         let entities = [...phase_2_encoding.matchAll(/~\\wd ~\\tg ([^~]*)~\\lu ([^~]+)/g)]
@@ -109,7 +109,7 @@
     }
 
     $: simple_phase_2 = transform_phase_2_encoding(source.phase_2_encoding).map(simple_display).join(' ')
-    
+
 </script>
 
 <h4 class="flex justify-between">

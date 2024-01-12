@@ -47,7 +47,7 @@
 							Curated examples ({curated_examples.length})
 						</span>
 
-						{#each curated_examples as { sentence, reference, semantic_representation }}
+						{#each curated_examples as { sentence, reference, argument_phrases }}
 							<blockquote class="mb-0">
 								<span>
 									{sentence}
@@ -58,7 +58,7 @@
 								</cite>
 
 								<footer class="mt-4 flex justify-around bg-base-100">
-									{#each semantic_representation as { part_of_speech, role, word }}
+									{#each argument_phrases as { part_of_speech, role, word }}
 										<span class="flex flex-col items-center py-2">
 											<span class="mb-1 not-italic tracking-widest text-base-content">
 												{word}
