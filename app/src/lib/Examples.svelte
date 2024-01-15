@@ -16,21 +16,24 @@
 	 * 		{											{
 	 * 			source: string								source: {
 	 *			book: string				=>					book: {
-	 *			chapter: number										'chapter:verse': readable_arguments,
+	 *			chapter: number										'chapter:verse': [readable_arguments],
 	 *			verse: number									},
 	 * 		},												},
 	 *		readable_arguments: string,					}
 	 *	}
 	 *
-	 * @param {Record<string, Record<string, Record<string, string>>>} transformed_examples
+	 * @param {Record<string, Record<string, Record<string, Array<string>>>>} transformed_examples
 	 * @param {Concept['examples'][0]} example
 	 */
 	function transform(transformed_examples, {reference, readable_arguments}) {
 		const {source, book, chapter, verse} = reference
+		const chapter_verse = `${chapter}:${verse}`
 
+		// There may be more than one occurrence within the verse, and we want to show all of them
 		transformed_examples[source] ??= {}
 		transformed_examples[source][book] ??= {}
-		transformed_examples[source][book][`${chapter}:${verse}`] = readable_arguments
+		transformed_examples[source][book][chapter_verse] ??= []
+		transformed_examples[source][book][chapter_verse].push(readable_arguments)
 
 		return transformed_examples
 	}
@@ -105,7 +108,10 @@
 			<select bind:value={selected_verse_json_encoded} disabled={! selected_book} class="select">
 				<option value="" disabled>Select a reference</option>
 				{#each Object.entries(verses) as verse}
-					<option value={JSON.stringify(verse[0])}>{verse[0]} {verse[1]}</option>
+					{#each verse[1] as occurrence}
+						<option value={JSON.stringify(verse[0])}>{verse[0]} {occurrence}</option>
+					{/each}
+					<!-- <option value={JSON.stringify(verse[0])}>{verse[0]} {verse[1]}</option> -->
 				{/each}
 			</select>
 		</form>
