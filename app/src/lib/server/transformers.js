@@ -1,4 +1,4 @@
-import {semantic_category, sources, theta_grid, usage_info} from './lookups'
+import {semantic_category, sources, theta_grid, usage_info, example_argument_slots} from './lookups'
 
 /**
  * @param {DbRowConcept} match_from_db
@@ -10,7 +10,7 @@ export function transform(match_from_db) {
 		...match_from_db,
 
 		categories: transform_categorization(match_from_db),
-		examples: transform_examples(match_from_db.examples),
+		examples: transform_examples(match_from_db),
 		curated_examples: transform_curated_examples(match_from_db.curated_examples),
 		occurrences: transform_occurrences(match_from_db.occurrences),
 	}
@@ -78,13 +78,28 @@ function transform_curated_examples(curated_examples_from_db) {
 	}
 }
 
+
 /**
- * @param {string} examples_from_db various encoding formats, here's one example '4|41|15|36|N|||wineA||\n4|41|15|36|N|||wineA||\n'
+ * @type {Record<string, (stem: string, example_slots: Map<string, string>) => string>}
+ */
+const example_decoders = {
+	Noun: transform_noun_example,
+	Verb: transform_verb_example,
+	Adjective: transform_adjective_example,
+	Adverb: transform_adverb_example,
+	Adposition: transform_adposition_example,
+}
+
+/**
+ * Various encoding formats depending on the part-of-speech.
+ * Here's one example '4|41|15|36|N|||wineA||'
+ * 
+ * @param {DbRowConcept} concept_from_db
  *
  * @returns {Example[]}
  */
-function transform_examples(examples_from_db) {
-	const encoded_examples = examples_from_db.split('\n').filter(field => !!field)
+function transform_examples({examples, part_of_speech, stem}) {
+	const encoded_examples = examples.split('\n').filter(field => !!field)
 
 	return encoded_examples.map(decode)
 
@@ -94,12 +109,166 @@ function transform_examples(examples_from_db) {
 	 * @returns {Example}
 	 * */
 	function decode(encoded_example) {
-		const [source, book, chapter, verse, ...rest] = encoded_example.split('|')
+		const [source, book, chapter, verse, ...argument_slots] = encoded_example.split('|')
+
+		const slot_names = example_argument_slots[part_of_speech] || []
+		const slots = argument_slots.reduce(example_reducer, new Map())
+		
+		const decoder = example_decoders[part_of_speech]
+		const readable_example = decoder ? decoder(stem, slots) : ''
 
 		return {
 			reference: decode_reference([source, book, chapter, verse].join(',')),
-			unknown_encoding: rest.join('|'),
+			readable_arguments: readable_example,
 		}
+
+		/**
+		 * Only keep the arguments that are present 
+		 * 
+		 * @param {Map<string, string>} reduced_slots 
+		 * @param {string} slot_value 
+		 * @param {number} index 
+		 */
+		function example_reducer(reduced_slots, slot_value, index) {
+			if (slot_value !== '') {
+				reduced_slots.set(slot_names[index], slot_value)
+			}
+			return reduced_slots
+		}
+	}
+}
+
+/**
+ * for Agent -> 'Noun Verb'
+ * for other roles -> 'Verb Noun(R)' where R is the role character
+ * 
+ * @param {string} stem 
+ * @param {Map<string, string>} example_slots
+ * 
+ * @returns {string}
+ */
+function transform_noun_example(stem, example_slots) {
+	let role = example_slots.get('Role')
+	let verb = example_slots.get('Verb')
+	if (role == 'A') {
+		return `${stem} ${verb}`
+	} else if (role == 'P') {
+		return `${verb} ${stem}`
+	} else if (role == 'X') {
+		return stem
+	} else {
+		return `${verb} ${stem}(${role})`
+	}
+}
+
+/**
+ * Put the Agent arguments before the verb and all other arguments afterwards.
+ * Proposition Arguments are already surrounded by brackets so leave as they are.
+ * For the Topic NP, p means 'Most Agent-Like' (active), P means 'Most Patient-Like' (passive)
+ * If passive, include (passive)
+ * 
+ * @param {string} stem 
+ * @param {Map<string, string>} example_slots
+ * 
+ * @returns {string}
+ */
+function transform_verb_example(stem, example_slots) {
+	const parts = [
+		example_slots.get('Topic NP') == 'P' ? '(passive)' : '',
+		example_slots.get('Agent') || '',
+		example_slots.get('Agent Proposition') || '',
+		stem,
+		example_slots.get('Patient') || '',
+		example_slots.has('State') ? example_slots.get('State') + '(S)' : '',
+		example_slots.has('Source') ? example_slots.get('Source') + '(s)' : '',
+		example_slots.has('Destination') ? example_slots.get('Destination') + '(d)' : '',
+		example_slots.has('Instrument') ? example_slots.get('Instrument') + '(I)' : '',
+		example_slots.has('Beneficiary') ? example_slots.get('Beneficiary') + '(B)' : '',
+		example_slots.get('Patient Proposition') || '',
+	]
+	return parts.filter(x => x !== '').join(' ')
+}
+
+/**
+ * Agent Verb (stem ModifiedNoun)
+ * Agent Verb (stem (PatientNoun))
+ * Agent Verb (stem PatientClause)
+ * All arguments except the stem are optional
+ * It it currently understood (but not confirmed) that a Modified Noun never occurs with a Patient Noun/Clause
+ * 
+ * @param {string} stem 
+ * @param {Map<string, string>} example_slots
+ * 
+ * @returns {string}
+ */
+function transform_adjective_example(stem, example_slots) {
+	let degree = example_slots.get('Degree')
+	if (degree && degree !== 'N') {
+		// N means 'no degree' so don't bother showing it
+		stem = `${stem}(${degree})`
+	}
+
+	let patient_noun = example_slots.get('Patient Noun') || ''
+	if (patient_noun !== '') {
+		// the patient noun goes in brackets to indicate the nesting
+		patient_noun = `(${patient_noun})`
+	}
+
+	const parts = [
+		example_slots.get('Agent') || '',
+		example_slots.get('Verb') || '',
+		'(',
+		stem,
+		patient_noun,
+		example_slots.get('Patient Proposition') || '',
+		example_slots.get('Modified Noun') || '',
+		')',
+	]
+	return parts.filter(x => x !== '').join(' ')
+}
+
+/**
+ * Verb Noun Adjective stem
+ * All arguments except the stem are optional
+ * 
+ * @param {string} stem 
+ * @param {Map<string, string>} example_slots
+ * 
+ * @returns {string}
+ */
+function transform_adverb_example(stem, example_slots) {
+	const parts = [
+		example_slots.get('Verb') || '',
+		example_slots.get('Noun') || '',
+		example_slots.get('Adjective') || '',
+		stem,
+	]
+	return parts.filter(x => x !== '').join(' ')
+}
+
+/**
+ * In adjunct phrase -> 		Verb (stem Noun)
+ * In Noun-Noun relationship ->	(HeadNoun (stem Noun))
+ * In adverbial clause -> 		[stem... ]
+
+ * @param {string} stem 
+ * @param {Map<string, string>} example_slots
+ * 
+ * @returns {string}
+ */
+function transform_adposition_example(stem, example_slots) {
+	const verb = example_slots.get('Verb')
+	const head_noun = example_slots.get('Head Noun')
+	const noun = example_slots.get('Noun') || ''
+
+	if (verb) {
+		return `${verb} (${stem} ${noun})`
+	} else if (head_noun) {
+		return `(${head_noun} (${stem} ${noun}))`
+	} else if (example_slots.has('Clause')) {
+		return `[${stem}... ]`
+	} else {
+		return stem
 	}
 }
 

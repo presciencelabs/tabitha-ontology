@@ -32,7 +32,7 @@ type CuratedExample = {
 
 type Example = {
 	reference: Reference
-	unknown_encoding: string
+	readable_arguments: string
 }
 
 type Reference = {
