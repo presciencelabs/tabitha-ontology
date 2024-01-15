@@ -16,21 +16,21 @@
 	 * 		{											{
 	 * 			source: string								source: {
 	 *			book: string				=>					book: {
-	 *			chapter: number										'chapter:verse': unknown_encoding,
+	 *			chapter: number										'chapter:verse': readable_arguments,
 	 *			verse: number									},
 	 * 		},												},
-	 *		unknown_encoding: string,					}
+	 *		readable_arguments: string,					}
 	 *	}
 	 *
 	 * @param {Record<string, Record<string, Record<string, string>>>} transformed_examples
 	 * @param {Concept['examples'][0]} example
 	 */
-	function transform(transformed_examples, {reference, unknown_encoding}) {
+	function transform(transformed_examples, {reference, readable_arguments}) {
 		const {source, book, chapter, verse} = reference
 
 		transformed_examples[source] ??= {}
 		transformed_examples[source][book] ??= {}
-		transformed_examples[source][book][`${chapter}:${verse}`] = unknown_encoding
+		transformed_examples[source][book][`${chapter}:${verse}`] = readable_arguments
 
 		return transformed_examples
 	}
@@ -105,7 +105,7 @@
 			<select bind:value={selected_verse_json_encoded} disabled={! selected_book} class="select">
 				<option value="" disabled>Select a reference</option>
 				{#each Object.entries(verses) as verse}
-					<option value={JSON.stringify(verse)}>{verse[0]} {verse[1]}</option>
+					<option value={JSON.stringify(verse[0])}>{verse[0]} {verse[1]}</option>
 				{/each}
 			</select>
 		</form>
@@ -114,7 +114,7 @@
 	{/if}
 
 	{#if selected_verse_json_encoded}
-		{@const [key, unknown_encoding] = JSON.parse(selected_verse_json_encoded)}
+		{@const key = JSON.parse(selected_verse_json_encoded)}
 		{@const [selected_chapter, selected_verse] = key.split(':')}
 		{@const selected_reference = {source: selected_source, book: selected_book, chapter: selected_chapter, verse: selected_verse}}
 
@@ -136,11 +136,5 @@
 			<Phase2 {source} />
 			<!-- TODO: need errorhandling here, i.e., :catch? -->
 		{/await}
-
-		<!-- <h4>unknown encoding</h4>
-		<span class="indicator font-mono">
-			{unknown_encoding}
-			<span data-tip="TBD: still needs to be decoded" class="badge indicator-item badge-warning badge-xs tooltip tooltip-top" />
-		</span> -->
 	{/if}
 </article>
