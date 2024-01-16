@@ -26,13 +26,13 @@ interface Concept extends AugmentedConcept {}
 
 type CuratedExample = {
 	reference: Reference
-	argument_phrases: ExampleArgumentStructure
+	encoding: SimplifiedSemanticEncoding
 	sentence: string
 }
 
 type Example = {
 	reference: Reference
-	readable_arguments: string
+	context_arguments: Map<string, string>
 }
 
 type Reference = {
@@ -42,9 +42,9 @@ type Reference = {
 	verse: number
 }
 
-type ExampleArgumentStructure = ExampleArgumentPhrase[]
+type SimplifiedSemanticEncoding = SimplifiedEncodingPhrase[]
 
-type ExampleArgumentPhrase = {
+type SimplifiedEncodingPhrase = {
 	part_of_speech: string
 	role: string
 	word: string
@@ -68,4 +68,4 @@ type SourceEntity = {
     entity: string
 }
 
-type SemanticRepresentation = SourcsEntity[]
+type SemanticEncoding = SourceEntity[]

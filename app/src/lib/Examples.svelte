@@ -1,42 +1,13 @@
 <script>
 	import Icon from "@iconify/svelte"
 	import { PUBLIC_SOURCES_API_HOST } from '$env/static/public'
-	import Phase2 from "./Phase2.svelte"
+	import SemanticEncoding from "./SemanticEncoding.svelte"
+	import { transform_example, display_context_arguments } from "./Examples"
 
-	/** @type {Concept['examples']} */
-	export let examples
+	/** @type {Concept} */
+	export let concept
 
-	$: transformed_examples = examples.reduce(transform, {})
-
-	// TODO: maybe this belongs in the data layer...need to consider
-	/**
-	 * Transforms a list of examples with "flat" References into a nested structure
-	 *
-	 * 	{
-	 * 		{											{
-	 * 			source: string								source: {
-	 *			book: string				=>					book: {
-	 *			chapter: number										'chapter:verse': [readable_arguments],
-	 *			verse: number									},
-	 * 		},												},
-	 *		readable_arguments: string,					}
-	 *	}
-	 *
-	 * @param {Record<string, Record<string, Record<string, Array<string>>>>} transformed_examples
-	 * @param {Concept['examples'][0]} example
-	 */
-	function transform(transformed_examples, {reference, readable_arguments}) {
-		const {source, book, chapter, verse} = reference
-		const chapter_verse = `${chapter}:${verse}`
-
-		// There may be more than one occurrence within the verse, and we want to show all of them
-		transformed_examples[source] ??= {}
-		transformed_examples[source][book] ??= {}
-		transformed_examples[source][book][chapter_verse] ??= []
-		transformed_examples[source][book][chapter_verse].push(readable_arguments)
-
-		return transformed_examples
-	}
+	$: transformed_examples = concept.examples.reduce(transform_example, {})
 
 	$: sources = Object.keys(transformed_examples)
 	/** @param {string} source */
@@ -109,9 +80,8 @@
 				<option value="" disabled>Select a reference</option>
 				{#each Object.entries(verses) as verse}
 					{#each verse[1] as occurrence}
-						<option value={JSON.stringify(verse[0])}>{verse[0]} {occurrence}</option>
+						<option value={JSON.stringify(verse[0])}>{verse[0]} {display_context_arguments(concept, occurrence)}</option>
 					{/each}
-					<!-- <option value={JSON.stringify(verse[0])}>{verse[0]} {verse[1]}</option> -->
 				{/each}
 			</select>
 		</form>
@@ -139,7 +109,7 @@
 				{source.phase_1_encoding}
 			</p>
 
-			<Phase2 {source} />
+			<SemanticEncoding {source} />
 			<!-- TODO: need errorhandling here, i.e., :catch? -->
 		{/await}
 	{/if}
