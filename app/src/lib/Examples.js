@@ -4,13 +4,21 @@
  * Transforms a list of examples with "flat" References into a nested structure
  *
  *	{
- *		{											{
- *			source: string								source: {
- *			book: string				=>					book: {
- *			chapter: number										'chapter:verse': [context_arguments],
- *			verse: number									},
- *		},												},
- *		context_arguments: Map<string, string>,		}
+ *		{
+ *			source: string
+ *			book: string
+ *			chapter: number
+ *			verse: number
+ *		},
+ *		context_arguments: Map<string, string>,
+ *	}
+ *	=>
+ *	{
+ *		source: {
+ *			book: {
+ *				'chapter:verse': [context_arguments],
+ *			},
+ *		},
  *	}
  *
  * @param {Record<string, Record<string, Record<string, Array<Map<string, string>>>>>} transformed_examples
@@ -162,9 +170,9 @@ function display_adverb_arguments(stem, context_arguments) {
 }
 
 /**
- * In adjunct phrase -> 		Verb (stem Noun)
- * In Noun-Noun relationship ->	(HeadNoun (stem Noun))
- * In adverbial clause -> 		[stem... ]
+ * In adjunct phrase -> Verb (stem Noun)
+ * In Noun-Noun relationship -> (HeadNoun (stem Noun))
+ * In adverbial clause -> [stem... ]
 
  * @param {string} stem 
  * @param {Map<string, string>} context_arguments

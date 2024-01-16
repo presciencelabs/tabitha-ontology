@@ -63,9 +63,9 @@ type SourceData = {
 
 type SourceEntity = {
 	label: string
-    features: string
+	features: string
 	sense: string
-    entity: string
+	entity: string
 }
 
 type SemanticEncoding = SourceEntity[]

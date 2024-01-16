@@ -1,7 +1,7 @@
 <script>
 
-	/** @type {SourceData}*/
-	export let source
+	/** @type {SourceData['phase_2_encoding']}*/
+	export let phase_2_encoding
 
 	const ENTITY_LABELS = new Map([
 		['c', 'C'],			// Clauses
@@ -36,12 +36,12 @@
 	 * '(' and ')' indicate a phrase boundary
 	 * 
 	 * Examples:
-	 * ~\wd ~\tg c-IDp00NNNNNNNNNNNNN.............~\lu {	=> { label: 'C', features: C-IDp00NNNNNNNNNNNNN.............', entity: '{' }
-	 * ~\wd ~\tg N-1A1SDAnK3NN........~\lu God	=> { label: 'N', features: 'N-1A1SDAnK3NN........', entity: 'God' }
-	 * ~\wd ~\tg v-S.....~\lu (		=> { label: 'VP', features: 'VP-S.....', entity: '(' }
-	 * ~\wd ~\tg C-1A.....~\lu then	=> { label: 'Con', features: 'Con-1A.....', entity: 'then' }
-	 * ~\wd ~\tg ~\lu )				=> { label: '', features: '', entity: ')' }
-	 * ~\wd ~\tg .-~\lu .			=> { label: 'period', features: 'period-', entity: '.' }
+	 * ~\wd ~\tg c-IDp00NNNNNNNNNNNNN.............~\lu {    => { label: 'C', features: C-IDp00NNNNNNNNNNNNN.............', entity: '{' }
+	 * ~\wd ~\tg N-1A1SDAnK3NN........~\lu God  => { label: 'N', features: 'N-1A1SDAnK3NN........', entity: 'God' }
+	 * ~\wd ~\tg v-S.....~\lu (     => { label: 'VP', features: 'VP-S.....', entity: '(' }
+	 * ~\wd ~\tg C-1A.....~\lu then => { label: 'Con', features: 'Con-1A.....', entity: 'then' }
+	 * ~\wd ~\tg ~\lu )             => { label: '', features: '', entity: ')' }
+	 * ~\wd ~\tg .-~\lu .           => { label: 'period', features: 'period-', entity: '.' }
 	 * 
 	 * @param {string} semantic_encoding 
 	 * 
@@ -110,7 +110,7 @@
 		}
 	}
 
-	$: simple_encoding = transform_semantic_encoding(source.phase_2_encoding).map(simple_display).join(' ')
+	$: simple_encoding = transform_semantic_encoding(phase_2_encoding).map(simple_display).join(' ')
 
 </script>
 

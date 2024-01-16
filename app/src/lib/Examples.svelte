@@ -2,7 +2,7 @@
 	import Icon from "@iconify/svelte"
 	import { PUBLIC_SOURCES_API_HOST } from '$env/static/public'
 	import SemanticEncoding from "./SemanticEncoding.svelte"
-	import { transform_example, display_context_arguments } from "./Examples"
+	import { transform_example, display_context_arguments } from "./examples"
 
 	/** @type {Concept} */
 	export let concept
@@ -109,7 +109,7 @@
 				{source.phase_1_encoding}
 			</p>
 
-			<SemanticEncoding {source} />
+			<SemanticEncoding phase_2_encoding={source.phase_2_encoding} />
 			<!-- TODO: need errorhandling here, i.e., :catch? -->
 		{/await}
 	{/if}
