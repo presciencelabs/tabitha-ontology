@@ -95,7 +95,8 @@
 		{@const selected_reference = { source: selected_source, book: selected_book, chapter: selected_chapter, verse: selected_verse }}
 
 		{#await get_source_data(selected_reference)}
-			loading... <!-- TODO: add a spinner? -->
+			<span class="loading loading-spinner text-warning" />
+			getting the source data...
 		{:then source}
 			<h4 class="flex justify-between">
 				Phase 1 encoding
