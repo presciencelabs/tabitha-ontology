@@ -82,6 +82,6 @@
 	{/if}
 
 	{#if selected_reference.verse}
-		<SourceData bind:reference={selected_reference} />
+		<SourceData reference={selected_reference} />
 	{/if}
 </article>
