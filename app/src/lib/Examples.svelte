@@ -1,6 +1,7 @@
 <script>
 	import { transform_example, display_context_arguments } from './examples'
 	import SourceData from './SourceData.svelte'
+	import TargetData from './TargetData.svelte'
 
 	/** @type {Concept} */
 	export let concept
@@ -83,5 +84,12 @@
 
 	{#if selected_reference.verse}
 		<SourceData reference={selected_reference} />
+
+		<h4>
+			Generated English text
+		</h4>
+		<p>
+			<TargetData reference={selected_reference} />
+		</p>
 	{/if}
 </article>

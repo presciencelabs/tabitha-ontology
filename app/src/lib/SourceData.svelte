@@ -2,7 +2,6 @@
 	import Icon from '@iconify/svelte'
 	import { PUBLIC_SOURCES_API_HOST } from '$env/static/public'
 	import SemanticEncoding from './SemanticEncoding.svelte'
-	import TargetData from './TargetData.svelte'
 
 	/** @type {Reference} */
 	export let reference
@@ -45,11 +44,4 @@
 	</p>
 
 	<SemanticEncoding phase_2_encoding={source.phase_2_encoding} />
-
-	<h4>
-		Generated English text
-	</h4>
-	<p>
-		<TargetData {reference} />
-	</p>
 {/await}
