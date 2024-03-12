@@ -8,7 +8,7 @@ export const load = db => async function(terms) {
 		CREATE TABLE IF NOT EXISTS Complex_Terms (
 			'term' 				TEXT,
 			'part_of_speech' 	TEXT,
-			'sructure'		 	TEXT,
+			'structure'		 	TEXT,
 			'pairing' 			TEXT,
 			'explication' 		TEXT
 		)
