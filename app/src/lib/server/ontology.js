@@ -90,13 +90,13 @@ export async function get_version(db) {
 
 /**
  * @param {import('@cloudflare/workers-types').D1Database} db
- * @returns {(term: string) => Promise<SimplificationHint[]>}
+ * @returns {(term: string) => Promise<SimplificationHint[]>} term is case-insensitive
  */
 export const get_simplification_hints = db => async term => {
 	const sql = `
 		SELECT *
 		FROM Complex_Terms
-		WHERE term = ?
+		WHERE term like ?
 	`
 
 	/** @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>} */
