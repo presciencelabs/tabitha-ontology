@@ -96,11 +96,15 @@ export const get_simplification_hints = db => async term => {
 	const sql = `
 		SELECT *
 		FROM Complex_Terms
-		WHERE term like ?
+		WHERE term LIKE ?
 	`
 
-	/** @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>} */
-	const { results } = await db.prepare(sql).bind(term).all()
+	/**
+	 * @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>}
+	 *
+	 * `WHERE term LIKE ${term}%` will ensure 'Flourish' will still return 'flourish-A'
+	 */
+	const { results } = await db.prepare(sql).bind(`${term}%`).all()
 
 	return results.map(normalize)
 
