@@ -126,7 +126,7 @@ export const get_simplification_hints = db => async term => {
 		return []
 	}
 
-	const term_w_default_sense = `${term}-A`
+	const term_w_default_sense = `${term}-_` // _ here means a single character wildcard:  https://sqlite.org/lang_expr.html#like
 	/**
 	 * handles the following cases:
 	 *		- complex_term=flourish
