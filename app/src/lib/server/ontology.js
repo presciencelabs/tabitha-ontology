@@ -126,15 +126,15 @@ export const get_simplification_hints = db => async term => {
 		return []
 	}
 
-	const term_w_default_sense = `${term}-_` // _ here means a single character wildcard:  https://sqlite.org/lang_expr.html#like
+	const term_w_any_sense = `${term}-_` // _ here means a single character wildcard:  https://sqlite.org/lang_expr.html#like
 	/**
 	 * handles the following cases:
 	 *		- complex_term=flourish
-	 *		- complex_term=accuse (results in multiple rows for accuse-A but not accuse-B)
+	 *		- complex_term=accuse (results in multiple rows for accuse, both accuse-A and accuse-B)
 	 *
 	 * @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>}
 	 */
-	const { results: results_second_try } = await db.prepare(sql).bind(term_w_default_sense).all()
+	const { results: results_second_try } = await db.prepare(sql).bind(term_w_any_sense).all()
 
 	return results_second_try.map(normalize_results)
 
