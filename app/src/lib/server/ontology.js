@@ -93,26 +93,50 @@ export async function get_version(db) {
  * @returns {(term: string) => Promise<SimplificationHint[]>} term is case-insensitive
  */
 export const get_simplification_hints = db => async term => {
-	if (!term) {
-		return []
-	}
-
-	const ENDS_IN_A_SENSE = /-[A-Z]$/
-	if (!ENDS_IN_A_SENSE.test(term)) {
-		term = `${term}-A`
-	}
-
-	// LIKE here is meant to allow case-insensitivity and the API will also support passing in a % as a wildcard (if consumer needs it)
 	const sql = `
 		SELECT *
 		FROM Complex_Terms
 		WHERE term LIKE ?
 	`
+	/**
+	 * LIKE creates case-insensitivity, also supports % as a wildcard if explicitly requested
+	 *
+	 * handles situations like these:
+	 * 	- complex_term=accurate
+	 * 	- complex_term=Accurate
+	 * 	- complex_term=Accura%
+	 * 	- complex_term=accuse-A (results in multiple rows)
+	 *
+	 * but not this:
+	 * 	- complex_term=flourish (this must be flourish-A)
+	 *
+	 * @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>}
+	 */
+	let { results } = await db.prepare(sql).bind(term).all()
 
-	/** @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>} */
-	const { results } = await db.prepare(sql).bind(term).all()
+	if (results.length) {
+		return results.map(normalize_results)
+	}
 
-	return results.map(normalize_results)
+	/**
+	 * if the term had a sense and there were no matches, no need to try anything else, e.g., love-A
+	 */
+	const ENDS_IN_A_SENSE = /-[A-Z]$/
+	if (ENDS_IN_A_SENSE.test(term)) {
+		return []
+	}
+
+	const term_w_default_sense = `${term}-A`
+	/**
+	 * handles the following cases:
+	 *		- complex_term=flourish
+	 *		- complex_term=accuse (results in multiple rows for accuse-A but not accuse-B)
+	 *
+	 * @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>}
+	 */
+	const { results: results_second_try } = await db.prepare(sql).bind(term_w_default_sense).all()
+
+	return results_second_try.map(normalize_results)
 
 	/** @param {SimplificationHint} arg */
 	function normalize_results({ term, part_of_speech, structure, pairing, explication }) {
