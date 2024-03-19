@@ -97,23 +97,25 @@ export const get_simplification_hints = db => async term => {
 		return []
 	}
 
+	const ENDS_IN_A_SENSE = /-[A-Z]$/
+	if (!ENDS_IN_A_SENSE.test(term)) {
+		term = `${term}-A`
+	}
+
+	// LIKE here is meant to allow case-insensitivity and the API will also support passing in a % as a wildcard (if consumer needs it)
 	const sql = `
 		SELECT *
 		FROM Complex_Terms
 		WHERE term LIKE ?
 	`
 
-	/**
-	 * @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>}
-	 *
-	 * `WHERE term LIKE ${term}%` will ensure 'Flourish' will still return 'flourish-A'
-	 */
-	const { results } = await db.prepare(sql).bind(`${term}%`).all()
+	/** @type {import('@cloudflare/workers-types').D1Result<SimplificationHint>} */
+	const { results } = await db.prepare(sql).bind(term).all()
 
-	return results.map(normalize)
+	return results.map(normalize_results)
 
 	/** @param {SimplificationHint} arg */
-	function normalize({ term, part_of_speech, structure, pairing, explication }) {
+	function normalize_results({ term, part_of_speech, structure, pairing, explication }) {
 		return { term, part_of_speech, structure, pairing, explication }
 	}
 }
