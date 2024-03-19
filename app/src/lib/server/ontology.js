@@ -93,6 +93,10 @@ export async function get_version(db) {
  * @returns {(term: string) => Promise<SimplificationHint[]>} term is case-insensitive
  */
 export const get_simplification_hints = db => async term => {
+	if (!term) {
+		return []
+	}
+
 	const sql = `
 		SELECT *
 		FROM Complex_Terms
