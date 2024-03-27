@@ -3,7 +3,7 @@ import { get_concepts } from '$lib/server/ontology'
 
 /** @type {import('./$types').RequestHandler} */
 export async function GET({ url: { searchParams }, locals: { db } }) {
-	const query = (searchParams.get('q') || '').trim()
+	const query = searchParams.get('q') ?? ''
 
 	const matches = await get_concepts(db)(query)
 
@@ -11,9 +11,7 @@ export async function GET({ url: { searchParams }, locals: { db } }) {
 
 	return json(lite_matches)
 
-	/**
-	 * @param {Concept} concept
-	 */
+	/** @param {Concept} concept */
 	function make_lite(concept) {
 		const { id, stem, sense, part_of_speech, level, gloss, categorization } = concept
 
