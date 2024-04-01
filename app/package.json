@@ -12,6 +12,7 @@
 		"build": "vite build",
 		"dev": "wrangler pages dev .svelte-kit/cloudflare",
 		"test:e2e": "playwright test",
+		"test:e2e:dev": "playwright test --ui",
 		"precommit": "pnpm check && pnpm build",
 		"clean:svelte": "rimraf .svelte-kit",
 		"clean:node": "rimraf node_modules",
@@ -19,11 +20,11 @@
 	},
 	"dependencies": {
 		"@iconify/svelte": "^3.1.6",
-		"@sveltejs/kit": "^2.5.4",
-		"@tailwindcss/typography": "^0.5.11",
+		"@sveltejs/kit": "^2.5.5",
+		"@tailwindcss/typography": "^0.5.12",
 		"daisyui": "^4.9.0",
 		"svelte": "^4.2.12",
-		"tailwindcss": "^3.4.1"
+		"tailwindcss": "^3.4.3"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240320.1",
