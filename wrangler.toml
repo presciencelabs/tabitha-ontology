@@ -1,0 +1,10 @@
+# https://developers.cloudflare.com/workers/wrangler/configuration
+
+# https://developers.cloudflare.com/workers/wrangler/configuration/#custom-builds
+[build]
+command = "pnpm build"
+
+[[d1_databases]]
+binding = "DB_Ontology"
+database_name = "Ontology.9488.2024-04-01"
+database_id = "6275cd70-3487-41e7-87a0-bd3123c0f10c"
