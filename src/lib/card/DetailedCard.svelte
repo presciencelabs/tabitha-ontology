@@ -52,9 +52,9 @@
 								<span>
 									{sentence}
 								</span>
-								<cite data-tip="Source: {reference.source}" class="tooltip tooltip-right tooltip-info block w-fit text-start text-xs">
-									({reference.book}
-									{reference.chapter}:{reference.verse})
+								<cite data-tip="Source: {reference.type}" class="tooltip tooltip-right tooltip-info block w-fit text-start text-xs">
+									({reference.id_primary}
+									{reference.id_secondary}:{reference.id_tertiary})
 								</cite>
 
 								<footer class="mt-4 flex justify-around bg-base-100">

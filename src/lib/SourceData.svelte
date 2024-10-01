@@ -22,8 +22,8 @@
 	 *
 	 * @returns {string} fully-qualified URL to the sources API
 	 */
-	function get_sources_url({ source, book, chapter, verse }) {
-		return `${PUBLIC_SOURCES_API_HOST}/${source}/${book}/${chapter}/${verse}`
+	function get_sources_url({ type, id_primary, id_secondary, id_tertiary }) {
+		return `${PUBLIC_SOURCES_API_HOST}/${type}/${id_primary}/${id_secondary}/${id_tertiary}`
 	}
 </script>
 
