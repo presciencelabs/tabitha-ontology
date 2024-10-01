@@ -74,17 +74,50 @@
 		'Revelation',
 	]
 
-	/**
-	 * @returns {Promise<[string, Example[]][]>}
-	 */
+	/** @type {Example[]}*/
+	let all_examples = []
+
+	/** @type {Example[]}*/
+	let filtered_examples = []
+
+	/** @type {Map<string, Set<string>>}*/
+	const filter_options = new Map()
+
 	async function get_examples() {
 		const response = await fetch(`/examples?concept=${concept.stem}-${concept.sense}&part_of_speech=${concept.part_of_speech}&source=Bible`)
 
-		/** @type {Example[]}*/
-		const examples = await response.json()
-		const grouped_examples = Map.groupBy(examples, example => example.reference.id_primary)
+		all_examples = await response.json()
+
 		// We want to show the books in Bible order rather than alphabetical order
-		return [...grouped_examples.entries()].toSorted((a, b) => bible_books.indexOf(a[0]) - bible_books.indexOf(b[0]))
+		all_examples.sort((a, b) => bible_books.indexOf(a.reference.id_primary) - bible_books.indexOf(b.reference.id_primary))
+
+		// get the filter options
+		filter_options.set('Book', new Set(all_examples.map(example => example.reference.id_primary)))
+
+		all_examples.forEach(example => {
+			for (const key in example.context) {
+				const values = filter_options.get(key) ?? new Set()
+				values.add(example.context[key])
+				filter_options.set(key, values)
+			}
+		})
+
+		apply_filters()
+	}
+
+	function apply_filters() {
+		retrieval_queue = []
+
+		// TODO get the filter values based on the 'example_filter_X' name, and filter the examples
+
+		filtered_examples = all_examples.slice(0, 100)
+	}
+
+	/** 
+	 * @param {string} key
+	 */
+	function sanitize_key(key) {
+		return key.split(' ').join('_')
 	}
 
 	/** @type {number[]} */
@@ -109,36 +142,41 @@
 	{#await get_examples()}
 		<span class="loading loading-spinner text-warning" />
 		loading the examples...
-	{:then grouped_examples}
-		{#each grouped_examples as [book, examples]}
-			<details class="collapse collapse-arrow bg-base-100">
+	{:then}
+		<div>
+			{#each filter_options as [key, values]}
+				{@const sanitized_key = sanitize_key(key)}
+				<label for="example_filter_{sanitized_key}">
+					{key}
+				</label>
+				<select name="example_filter_{sanitized_key}" on:change={apply_filters} class="select select-primary select-md">
+					<option value="*">All</option>
+					{#each values as value}
+						<option value="{value}">{value}</option>
+					{/each}
+				</select>
+			{/each}
+		</div>
+		{#each filtered_examples as { reference, context }, i}
+			{@const { id_primary, id_secondary, id_tertiary } = reference}
+			{@const context_display = Object.entries(context).map(([k, v]) => `${k}: ${v}`).join(' | ')}
+
+			<details on:toggle={event => handle_queue(event, i)} class="collapse collapse-arrow bg-base-100">
 				<summary class="collapse-title border border-base-200">
-					book
+					{id_primary} {id_secondary}:{id_tertiary} | <span class="italic">{context_display}</span> |
 				</summary>
 
 				<section class="collapse-content">
-					{#each examples as { reference, context }, i}
-						{@const { id_primary, id_secondary, id_tertiary } = reference}
-						{@const context_display = Object.entries(context).map((k, v) => `${k}: ${v}`).join(' | ')}
-						<details on:toggle={event => handle_queue(event, i)} class="collapse collapse-arrow bg-base-100">
-							<summary class="collapse-title border border-base-200">
-								{id_primary} {id_secondary}:{id_tertiary} (<span class="italic">{context_display}</span>)
-							</summary>
+					{#if retrieval_queue.includes(i)}
+						<SourceData {reference} />
 
-							<section class="collapse-content">
-								{#if retrieval_queue.includes(i)}
-									<SourceData {reference} />
-
-									<h4>
-										Generated English text
-									</h4>
-									<p>
-										<TargetData {reference} />
-									</p>
-								{/if}
-							</section>
-						</details>
-					{/each}
+						<h4>
+							Generated English text
+						</h4>
+						<p>
+							<TargetData {reference} />
+						</p>
+					{/if}
 				</section>
 			</details>
 		{/each}
