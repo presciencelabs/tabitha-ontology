@@ -164,11 +164,11 @@
 				<label transition:fade={FADE_CHARACTERISTICS} class="join-item flex flex-col">
 					<span class="label">{category}</span>
 
-					<select bind:value={selected_filters[normalized_category]} class="select">
-						<option value="*">All</option>
+					<select bind:value={selected_filters[normalized_category]} class="select text-base-content">
+						<option value="*" selected>All</option>
 
 						{#each [...options].sort() as option}
-							<option value="{option}">{option}</option>
+							<option value={option}>{option}</option>
 						{/each}
 					</select>
 				</label>
