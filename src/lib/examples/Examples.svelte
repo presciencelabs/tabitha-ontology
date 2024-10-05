@@ -157,7 +157,7 @@
 		<span class="loading loading-spinner text-warning" />
 		loading the examples...
 	{:then}
-		<section transition:fade={FADE_CHARACTERISTICS} class="join gap-4 bg-info text-info-content px-4 pb-4 mb-4">
+		<section transition:fade={FADE_CHARACTERISTICS} class="join gap-4 bg-info text-info-content px-4 pb-4 mb-4 overflow-x-auto">
 			{#each filters as [category, options]}
 				{@const normalized_category = normalize_category(category)}
 
