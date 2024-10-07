@@ -78,5 +78,5 @@ export function sort_by_book_order(reference_1, reference_2) {
 	const index_1 = book_order.indexOf(reference_1.id_primary)
 	const index_2 = book_order.indexOf(reference_2.id_primary)
 
-	return index_2 - index_1
+	return index_1 - index_2
 }

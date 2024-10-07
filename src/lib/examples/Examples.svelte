@@ -29,6 +29,14 @@
 	function normalize_category(category) {
 		return category.replaceAll(' ', '_')
 	}
+	/**
+	 * reverses the above
+	 * @param {Category} category
+	 * @returns {string}
+	 */
+	function denormalize_category(category) {
+		return category.replaceAll('_', ' ')
+	}
 
 	/** @type {Example[]}*/
 	let all_examples = []
@@ -43,7 +51,7 @@
 	$: sorted_examples = all_examples.toSorted((example_1, example_2) => sort_by_book_order(example_1.reference, example_2.reference))
 	$: filters = derive_filters(sorted_examples)
 	$: filtered_examples = apply_filters(sorted_examples, selected_filters)
-	$: update_filters(filtered_examples)
+	// $: update_filters(filtered_examples)
 
 	/**
 	 * @param {Example[]} examples
@@ -114,14 +122,14 @@
 
 			/** @param { [Category, Option] } filter */
 			function satisfies_filter([category, option]) {
-				return option === '*' || example.context[category] === option || example.reference.id_primary === option
+				const denormalized_category = denormalize_category(category)
+
+				return option === '*' || example.context[denormalized_category] === option || example.reference.id_primary === option
 			}
 		}
 	}
 
-	/**
-	 * @param {Example[]} filtered_examples
-	 */
+	/** @param {Example[]} filtered_examples */
 	function update_filters(filtered_examples) {
 		filters = derive_filters(filtered_examples)
 	}
@@ -191,7 +199,7 @@
 					{id_primary} {id_secondary}:{id_tertiary}
 
 					{#each Object.entries(context) as [key, value]}
-						<span class="badge badge-info badge-outline ml-2">
+						<span class="badge badge-info p-4 badge-outline ml-2">
 							<em>{key}: </em>
 							<strong class="ml-2 text-info font font-semibold">{value}</strong>
 						</span>
