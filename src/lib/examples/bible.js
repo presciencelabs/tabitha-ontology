@@ -65,6 +65,7 @@ const book_order = [
 	'3 John',
 	'Jude',
 	'Revelation',
+	'Revelations', // TODO: this can be removed once TBTA's Bible.mdb.Revelations table name is fixed
 ]
 
 /**
