@@ -1,7 +1,7 @@
 <script>
 	import { createEventDispatcher } from 'svelte'
 
-	/** @type {Example[]} */
+	/** @type { Example[] } */
 	export let examples
 
 	const dispatch = createEventDispatcher()
@@ -9,8 +9,6 @@
 	$: filters = derive_filters(examples)
 
 	/**
-	 * @param {Example[]} examples
-	 *
 	 * @typedef { string } Category
 	 * @typedef { string } Option
 	 * @typedef { Set<Option> } Options
@@ -31,7 +29,8 @@
 	 * | Adposition	| ...									|
 	 * | Outer Nouns	| ...									|
 	 *
-	 * @returns {Filters}
+	 * @param { Example[] } examples
+	 * @returns { Filters }
 	 */
 	function derive_filters(examples) {
 		const filters = new Map()
@@ -46,7 +45,7 @@
 		return filters
 
 		function derive_context_filters() {
-			/** @type {Filters} */
+			/** @type { Filters } */
 			const context_filters = new Map()
 
 			examples.forEach(({context}) => {
@@ -66,16 +65,16 @@
 	/**
 	 * converts things like "Topic NP" to "Topic_NP" or "Outer Adverb" to "Outer_Adverb" so they can be
 	 * 	used as property names on objects (since the select binding cannot be a Map)
-	 * @param {string} category
-	 * @returns {Category}
+	 * @param { string } category
+	 * @returns { Category }
 	 */
 	function normalize_category(category) {
 		return category.replaceAll(' ', '_')
 	}
 	/**
 	 * reverses the above
-	 * @param {Category} category
-	 * @returns {string}
+	 * @param { Category } category
+	 * @returns { string }
 	 */
 	function denormalize_category(category) {
 		return category.replaceAll('_', ' ')
@@ -93,16 +92,16 @@
 	$: dispatch('data-filtered', filtered_examples)
 
 	/**
-	 * @param {Example[]} examples
-	 * @param {SelectedFilters} filters
-	 * @returns {Example[]}
+	 * @param { Example[] } examples
+	 * @param { SelectedFilters } filters
+	 * @returns { Example[] }
 	 */
 	function apply_filters(examples = [], filters) {
 		const results = examples.filter(is_a_match)
 
 		return results
 
-		/** @param {Example} example */
+		/** @param { Example } example */
 		function is_a_match(example) {
 			return Object.entries(filters).every(satisfies_filter)
 

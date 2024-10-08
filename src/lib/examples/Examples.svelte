@@ -6,25 +6,25 @@
 	import { fade } from 'svelte/transition'
 	import Filters from './Filters.svelte'
 
-	/** @type {Concept} */
+	/** @type { Concept } */
 	export let concept
 
 	const MAX_EXAMPLES_DISPLAYED = 100
 
-	/** @type {Example[]}*/
+	/** @type { Example[] } */
 	let all_examples = []
 
-	/** @type {Example[]}*/
+	/** @type { Example[] } */
 	let filtered_examples = []
 
-	/** @param {Concept} concept }*/
+	/** @param { Concept } concept */
 	async function load_examples({ stem, sense, part_of_speech }) {
 		const response = await fetch(`/examples?concept=${stem}-${sense}&part_of_speech=${part_of_speech}&source=Bible`)
 
 		all_examples = await response.json()
 	}
 
-	/** @param {CustomEvent<Example[]>} event */
+	/** @param { CustomEvent<Example[]> } event */
 	function update_filtered_examples({ detail }) {
 		filtered_examples = detail
 			.toSorted((example_1, example_2) => sort_by_book_order(example_1.reference, example_2.reference))
@@ -36,12 +36,12 @@
 		duration: 700
 	}
 
-	/** @type {number[]} */
+	/** @type { number[] } */
 	let retrieval_queue = []
 
 	/**
-	 * @param {Event & {currentTarget: HTMLDetailsElement}} event
-	 * @param {number} id
+	 * @param { Event & { currentTarget: HTMLDetailsElement }} event
+	 * @param { number } id
 	 */
 	function handle_queue({ currentTarget: details }, id) {
 		if (details.open) {
