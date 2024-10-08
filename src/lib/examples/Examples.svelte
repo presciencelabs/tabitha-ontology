@@ -97,6 +97,14 @@
 					{/if}
 				</section>
 			</details>
+		{:else}
+			<p>
+				{#if filtered_examples.length === 0 && all_examples.length > 0}
+					No examples matching that criteria.
+				{:else}
+					No examples at this time.
+				{/if}
+			</p>
 		{/each}
 	{/await}
 </article>
