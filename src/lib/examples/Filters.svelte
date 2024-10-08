@@ -117,12 +117,10 @@
 </script>
 
 
-<!-- <section transition:fade={FADE_CHARACTERISTICS} class="join gap-4 bg-info text-info-content px-4 pb-4 mb-4 overflow-x-auto"> -->
 <section class="join gap-4 bg-info text-info-content px-4 pb-4 mb-4 overflow-x-auto">
 	{#each filters as [category, options]}
 		{@const normalized_category = normalize_category(category)}
 
-		<!-- <label transition:fade={FADE_CHARACTERISTICS} class="join-item flex flex-col"> -->
 		<label class="join-item flex flex-col">
 			<span class="label">{category}</span>
 

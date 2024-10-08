@@ -28,7 +28,7 @@
 	function update_filtered_examples({ detail }) {
 		filtered_examples = detail
 			.toSorted((example_1, example_2) => sort_by_book_order(example_1.reference, example_2.reference))
-			.slice(0, MAX_EXAMPLES_DISPLAYED)
+
 	}
 
 	const FADE_CHARACTERISTICS = {
@@ -69,7 +69,7 @@
 			</section>
 		{/if}
 
-		{#each filtered_examples as { reference, context }, i}
+		{#each filtered_examples.slice(0, MAX_EXAMPLES_DISPLAYED) as { reference, context }, i}
 			{@const { id_primary, id_secondary, id_tertiary } = reference}
 
 			<details on:toggle={event => handle_queue(event, i)} transition:fade={FADE_CHARACTERISTICS} class="collapse collapse-arrow bg-base-100">
