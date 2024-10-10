@@ -1,5 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte'
+	import { by_book_order } from './bible'
 
 	/** @type { Example[] } */
 	export let examples
@@ -35,7 +36,7 @@
 	function derive_filters(examples) {
 		const filters = new Map()
 
-		const book_names = examples.map(({reference}) => reference.id_primary)
+		const book_names = examples.sort(by_book_order).map(id_primary)
 		filters.set('Book', new Set(book_names))
 
 		for (const [category, options] of derive_context_filters()) {
@@ -44,11 +45,18 @@
 
 		return filters
 
+		/** @param { Example } example */
+		function id_primary({reference: {id_primary}}) {
+			return id_primary
+		}
+
 		function derive_context_filters() {
 			/** @type { Filters } */
 			const context_filters = new Map()
 
 			examples.forEach(({context}) => {
+				// TODO: Verbs, for example, should not include the "junk" categories... there may be other situations as well.
+				// TODO: Role has a specific, non-alphabetic sort order that should be applied here.
 				for(const category in context) {
 					const options = context_filters.get(category) ?? new Set()
 
@@ -126,7 +134,7 @@
 			<select bind:value={selected_filters[normalized_category]} class="select text-base-content">
 				<option value="*" selected>All</option>
 
-				{#each [...options].sort() as option}
+				{#each [...options] as option}
 					<option value={option}>{option}</option>
 				{/each}
 			</select>

@@ -1,6 +1,6 @@
 <script>
 	import Icon from '@iconify/svelte'
-	import { sort_by_book_order } from './bible'
+	import { by_book_order } from './bible'
 	import SourceData from './SourceData.svelte'
 	import TargetData from './TargetData.svelte'
 	import { fade } from 'svelte/transition'
@@ -22,13 +22,6 @@
 		const response = await fetch(`/examples?concept=${stem}-${sense}&part_of_speech=${part_of_speech}&source=Bible`)
 
 		all_examples = await response.json()
-	}
-
-	/** @param { CustomEvent<Example[]> } event */
-	function update_filtered_examples({ detail }) {
-		filtered_examples = detail
-			.toSorted((example_1, example_2) => sort_by_book_order(example_1.reference, example_2.reference))
-
 	}
 
 	const FADE_CHARACTERISTICS = {
@@ -59,7 +52,7 @@
 		<span class="loading loading-spinner text-warning" />
 		loading the examples...
 	{:then}
-		<Filters examples={all_examples} on:data-filtered={update_filtered_examples} />
+		<Filters examples={all_examples} on:data-filtered={({ detail }) => (filtered_examples = detail)} />
 
 		{#if filtered_examples.length > MAX_EXAMPLES_DISPLAYED}
 			<section transition:fade={FADE_CHARACTERISTICS} class="alert alert-warning">
@@ -69,7 +62,7 @@
 			</section>
 		{/if}
 
-		{#each filtered_examples.slice(0, MAX_EXAMPLES_DISPLAYED) as { reference, context }, i}
+		{#each filtered_examples.sort(by_book_order).slice(0, MAX_EXAMPLES_DISPLAYED) as { reference, context }, i}
 			{@const { id_primary, id_secondary, id_tertiary } = reference}
 
 			<details on:toggle={event => handle_queue(event, i)} transition:fade={FADE_CHARACTERISTICS} class="collapse collapse-arrow bg-base-100">

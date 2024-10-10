@@ -71,13 +71,13 @@ const book_order = [
 /**
  * Sorts by book order rather than the natural alphabetical order
  *
- * @param {Reference} reference_1
- * @param {Reference} reference_2
+ * @param {Example} example_1
+ * @param {Example} example_2
  * @returns
  */
-export function sort_by_book_order(reference_1, reference_2) {
-	const index_1 = book_order.indexOf(reference_1.id_primary)
-	const index_2 = book_order.indexOf(reference_2.id_primary)
+export function by_book_order(example_1, example_2) {
+	const index_1 = book_order.indexOf(example_1.reference.id_primary)
+	const index_2 = book_order.indexOf(example_2.reference.id_primary)
 
 	return index_1 - index_2
 }
