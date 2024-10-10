@@ -55,7 +55,7 @@
 			const context_filters = new Map()
 
 			examples.forEach(({context}) => {
-				// TODO: Verbs, for example, should not include the "junk" categories... there may be other situations as well.
+				// TODO: Verbs, for example, might not need to include the "junk" categories...need to get soem feedback from phase 1 folks.
 				// TODO: Role has a specific, non-alphabetic sort order that should be applied here.
 				for(const category in context) {
 					const options = context_filters.get(category) ?? new Set()
@@ -117,7 +117,27 @@
 			function satisfies_filter([category, option]) {
 				const denormalized_category = denormalize_category(category)
 
-				return option === '*' || example.context[denormalized_category] === option || example.reference.id_primary === option
+				if (option === '*') {
+					return true
+				}
+
+				if (example.context[denormalized_category] === option) {
+					return true
+				}
+
+				if (example.reference.id_primary === option) {
+					return true
+				}
+
+				if (option === 'Present') {
+					return !!example.context[denormalized_category]
+				}
+
+				if (option === 'Not present') {
+					return !example.context[denormalized_category]
+				}
+
+				return false
 			}
 		}
 	}
@@ -133,6 +153,9 @@
 
 			<select bind:value={selected_filters[normalized_category]} class="select text-base-content">
 				<option value="*" selected>All</option>
+
+				<option value="Present">Present</option>
+				<option value="Not present">Not present</option>
 
 				{#each [...options] as option}
 					<option value={option}>{option}</option>
