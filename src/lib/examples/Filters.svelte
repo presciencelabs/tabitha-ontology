@@ -154,8 +154,10 @@
 			<select bind:value={selected_filters[normalized_category]} class="select text-base-content">
 				<option value="*" selected>All</option>
 
-				<option value="Present">Present</option>
-				<option value="Not present">Not present</option>
+				{#if category !== 'Book'} <!-- TODO: are there other categories? -->
+					<option value="Present">Present</option>
+					<option value="Not present">Not present</option>
+				{/if}
 
 				{#each [...options] as option}
 					<option value={option}>{option}</option>
