@@ -35,12 +35,20 @@
 	 */
 	function derive_filters(examples) {
 		const filters = new Map()
+		const common_options = ['All']
 
 		const book_names = examples.sort(by_book_order).map(id_primary)
-		filters.set('Book', new Set(book_names))
+		filters.set('Book', new Set([...common_options, ...book_names]))
 
 		for (const [category, options] of derive_context_filters()) {
-			filters.set(category, options)
+			// TODO: these options should only be added for those optional theta grid components, e.g., take-A => (Source) (Destination) (Instrument)
+			if (! ['Book', 'Topic NP', 'Polarity', 'Degree'].includes(category)) {
+				common_options.push('Present', 'Not present')
+			}
+
+			const sorted_options = [...options].sort()
+
+			filters.set(category, new Set([...common_options, ...sorted_options]))
 		}
 
 		return filters
@@ -55,7 +63,7 @@
 			const context_filters = new Map()
 
 			examples.forEach(({context}) => {
-				// TODO: Verbs, for example, might not need to include the "junk" categories...need to get soem feedback from phase 1 folks.
+				// TODO: Verbs, for example, might not need to include the "junk" categories...need to get some feedback from phase 1 folks.
 				// TODO: Role has a specific, non-alphabetic sort order that should be applied here.
 				for(const category in context) {
 					const options = context_filters.get(category) ?? new Set()
@@ -117,7 +125,7 @@
 			function satisfies_filter([category, option]) {
 				const denormalized_category = denormalize_category(category)
 
-				if (option === '*') {
+				if (option === 'All') {
 					return true
 				}
 
@@ -152,15 +160,8 @@
 			<span class="label">{category}</span>
 
 			<select bind:value={selected_filters[normalized_category]} class="select text-base-content">
-				<option value="*" selected>All</option>
-
-				{#if category !== 'Book'} <!-- TODO: are there other categories? -->
-					<option value="Present">Present</option>
-					<option value="Not present">Not present</option>
-				{/if}
-
-				{#each [...options] as option}
-					<option value={option}>{option}</option>
+				{#each [...options] as option, i}
+					<option value={option} selected={i === 0}>{option}</option>
 				{/each}
 			</select>
 		</label>
