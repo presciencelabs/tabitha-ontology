@@ -35,7 +35,7 @@
 	 */
 	function derive_filters(examples) {
 		const filters = new Map()
-		const common_options = ['All']
+		const common_options = ['Any']
 
 		const book_names = examples.sort(by_book_order).map(id_primary)
 		filters.set('Book', new Set([...common_options, ...book_names]))
@@ -63,8 +63,6 @@
 			const context_filters = new Map()
 
 			examples.forEach(({context}) => {
-				// TODO: Verbs, for example, might not need to include the "junk" categories...need to get some feedback from phase 1 folks.
-				// TODO: Role has a specific, non-alphabetic sort order that should be applied here.
 				for(const category in context) {
 					const options = context_filters.get(category) ?? new Set()
 
@@ -125,7 +123,7 @@
 			function satisfies_filter([category, option]) {
 				const denormalized_category = denormalize_category(category)
 
-				if (option === 'All') {
+				if (option === 'Any') {
 					return true
 				}
 
