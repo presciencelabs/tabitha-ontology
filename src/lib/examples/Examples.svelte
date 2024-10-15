@@ -52,7 +52,7 @@
 		<span class="loading loading-spinner text-warning" />
 		loading the examples...
 	{:then}
-		<Filters examples={all_examples} on:data-filtered={({ detail }) => (filtered_examples = detail)} />
+		<Filters {concept} examples={all_examples} on:data-filtered={({ detail }) => (filtered_examples = detail)} />
 
 		{#if filtered_examples.length > MAX_EXAMPLES_DISPLAYED}
 			<section transition:fade={FADE_CHARACTERISTICS} class="alert alert-warning">

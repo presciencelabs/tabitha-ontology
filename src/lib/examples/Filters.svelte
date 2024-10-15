@@ -2,21 +2,24 @@
 	import { createEventDispatcher } from 'svelte'
 	import { by_book_order } from './bible'
 
+	/** @type { Concept } */
+	export let concept
+
 	/** @type { Example[] } */
 	export let examples
 
 	const dispatch = createEventDispatcher()
 
-	$: filters = derive_filters(examples)
+	$: filters = derive_filters(concept, examples)
 
 	/**
-	 * @typedef { string } Category
+	 * @typedef { string } Name
 	 * @typedef { string } Option
 	 * @typedef { Set<Option> } Options
-	 * @typedef { Map<Category, Options> } Filters
+	 * @typedef { Map<Name, Options> } Filters
 	 *
 	 * ______________________________________________
-	 * | Category		| Options 							|
+	 * | Name			| Options 							|
 	 * | ------------	| --------------------------- |
 	 * | Book			| Genesis, Exodus, ...			|
 	 *
@@ -30,25 +33,25 @@
 	 * | Adposition	| ...									|
 	 * | Outer Nouns	| ...									|
 	 *
+	 * @param { Concept } concept
 	 * @param { Example[] } examples
 	 * @returns { Filters }
 	 */
-	function derive_filters(examples) {
+	function derive_filters(concept, examples) {
 		const filters = new Map()
 		const common_options = ['Any']
 
 		const book_names = examples.sort(by_book_order).map(id_primary)
 		filters.set('Book', new Set([...common_options, ...book_names]))
 
-		for (const [category, options] of derive_context_filters()) {
-			// TODO: these options should only be added for those optional theta grid components, e.g., take-A => (Source) (Destination) (Instrument)
-			if (! ['Book', 'Topic NP', 'Polarity', 'Degree'].includes(category)) {
+		for (const [name, options] of derive_context_filters()) {
+			if (! ['Book', 'Topic NP', 'Polarity', 'Degree'].includes(name)) {
 				common_options.push('Present', 'Not present')
 			}
 
 			const sorted_options = [...options].sort()
 
-			filters.set(category, new Set([...common_options, ...sorted_options]))
+			filters.set(name, new Set([...common_options, ...sorted_options]))
 		}
 
 		return filters
@@ -63,7 +66,7 @@
 			const context_filters = new Map()
 
 			examples.forEach(({context}) => {
-				for(const category in context) {
+				for(const category of Object.keys(context).filter(include)) {
 					const options = context_filters.get(category) ?? new Set()
 
 					options.add(context[category])
@@ -73,29 +76,42 @@
 			})
 
 			return context_filters
+
+			/** @param { Name } name */
+			function include(name) {
+				if (concept.part_of_speech === 'Verb' && ['Addressee'].includes(name)) {
+					return false
+				}
+
+				if (concept.part_of_speech === 'Adjective' && ['Agent', 'Verb'].includes(name)) {
+					return false
+				}
+
+				return true
+			}
 		}
 	}
 
 	/**
 	 * converts things like "Topic NP" to "Topic_NP" or "Outer Adverb" to "Outer_Adverb" so they can be
 	 * 	used as property names on objects (since the select binding cannot be a Map)
-	 * @param { string } category
-	 * @returns { Category }
+	 * @param { string } name
+	 * @returns { Name }
 	 */
-	function normalize_category(category) {
-		return category.replaceAll(' ', '_')
+	function normalize_name(name) {
+		return name.replaceAll(' ', '_')
 	}
 	/**
 	 * reverses the above
-	 * @param { Category } category
+	 * @param { Name } name
 	 * @returns { string }
 	 */
-	function denormalize_category(category) {
-		return category.replaceAll('_', ' ')
+	function denormalize_name(name) {
+		return name.replaceAll('_', ' ')
 	}
 
 	/**
-	 * @typedef { Record<Category, Option> } SelectedFilters – Had to choose an object-based approach here
+	 * @typedef { Record<Name, Option> } SelectedFilters – Had to choose an object-based approach here
 	 * 	because Svelte doesn't support binding a Map to a select.
 	 *
 	 * @type { SelectedFilters }
@@ -119,15 +135,15 @@
 		function is_a_match(example) {
 			return Object.entries(filters).every(satisfies_filter)
 
-			/** @param { [Category, Option] } filter */
-			function satisfies_filter([category, option]) {
-				const denormalized_category = denormalize_category(category)
+			/** @param { [Name, Option] } filter */
+			function satisfies_filter([name, option]) {
+				const denormalized_name = denormalize_name(name)
 
 				if (option === 'Any') {
 					return true
 				}
 
-				if (example.context[denormalized_category] === option) {
+				if (example.context[denormalized_name] === option) {
 					return true
 				}
 
@@ -136,11 +152,11 @@
 				}
 
 				if (option === 'Present') {
-					return !!example.context[denormalized_category]
+					return !!example.context[denormalized_name]
 				}
 
 				if (option === 'Not present') {
-					return !example.context[denormalized_category]
+					return !example.context[denormalized_name]
 				}
 
 				return false
@@ -151,13 +167,13 @@
 
 
 <section class="join gap-4 bg-info text-info-content px-4 pb-4 mb-4 overflow-x-auto">
-	{#each filters as [category, options]}
-		{@const normalized_category = normalize_category(category)}
+	{#each filters as [name, options]}
+		{@const normalized_name = normalize_name(name)}
 
 		<label class="join-item flex flex-col">
-			<span class="label">{category}</span>
+			<span class="label">{name}</span>
 
-			<select bind:value={selected_filters[normalized_category]} class="select text-base-content">
+			<select bind:value={selected_filters[normalized_name]} class="select text-base-content">
 				{#each [...options] as option, i}
 					<option value={option} selected={i === 0}>{option}</option>
 				{/each}
