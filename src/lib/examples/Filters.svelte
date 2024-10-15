@@ -83,10 +83,6 @@
 					return false
 				}
 
-				if (concept.part_of_speech === 'Adjective' && ['Agent', 'Verb'].includes(name)) {
-					return false
-				}
-
 				return true
 			}
 		}
