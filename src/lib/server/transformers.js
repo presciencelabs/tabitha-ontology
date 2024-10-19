@@ -1,4 +1,4 @@
-import { semantic_category, sources, theta_grid, usage_info } from './lookups'
+import { semantic_category, sources, theta_grid, usage_info } from '$lib/lookups'
 
 /**
  * @param {DbRowConcept} match_from_db

@@ -1,10 +1,10 @@
 <script>
 	import Icon from '@iconify/svelte'
-	import { by_book_order } from './bible'
 	import SourceData from './SourceData.svelte'
 	import TargetData from './TargetData.svelte'
 	import { fade } from 'svelte/transition'
 	import Filters from './Filters.svelte'
+	import { by_book_order } from './filters'
 
 	/** @type { Concept } */
 	export let concept

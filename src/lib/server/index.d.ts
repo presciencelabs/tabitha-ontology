@@ -55,7 +55,9 @@ type Example = {
 	context: ContextArguments
 }
 
-type ContextArguments = Record<string, string>
+type ContextArgumentName = string
+type ContextArgumentValue = string
+type ContextArguments = Record<ContextArgumentName, ContextArgumentValue>
 
 type Reference = {
 	type: string
