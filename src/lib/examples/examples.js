@@ -1,5 +1,5 @@
 /**
- * Argument slots come after the reference part of an example.
+ * Context arguments come after the reference part of an example.
  * eg. for a Verb: 4|1|20|13|p|A|SarahA|AbrahamA||||||| -> p|A|SarahA|AbrahamA|||||||
  * eg. for a Noun: 4|19|23|6|followA|A -> followA|A
  *
@@ -8,9 +8,9 @@
  * just two slots indicating the Verb the Noun is attached to, and the semantic role it
  * plays in the clause.
  *
- * @type { import('.').ArgumentSlots }
+ * @type { import('.').ContextArgumentMap }
  */
-export const argument_slots = new Map([
+export const context_argument_map = new Map([
 	['Noun', [
 		'Verb',
 		'Role',

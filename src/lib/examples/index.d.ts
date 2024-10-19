@@ -1,6 +1,6 @@
 import { Concept, ContextArgumentName, ContextArgumentValue } from '$lib/server'
 
-type ArgumentSlots = Map<Concept['part_of_speech'], ContextArgumentName[]>
+type ContextArgumentMap = Map<Concept['part_of_speech'], ContextArgumentName[]>
 
 type Option = ContextArgumentValue
 type Options = Set<Option>

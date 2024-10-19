@@ -1,5 +1,5 @@
 import { bible_books } from '$lib/lookups'
-import { argument_slots } from './examples'
+import { context_argument_map } from './examples'
 
 /** @type { import('.').FilterMap } */
 const filter_map = initialize()
