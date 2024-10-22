@@ -72,7 +72,8 @@ export function derive_filters(concept, examples) {
 	for (const [name, options] of context_filters.entries().filter(has_options)) {
 		const common_options = new Set()
 
-		if (options.size > 1) {
+		// second condition added because take-A [Instrument and Addressee] both have only one option...
+		if (options.size > 1 || absence_tracker[name] && options.size === 1) {
 			common_options.add('Any')
 		}
 
