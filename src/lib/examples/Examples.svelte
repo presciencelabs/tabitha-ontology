@@ -46,7 +46,15 @@
 </script>
 
 <article class="bg-base-200 p-4 flex flex-col gap-4 prose max-w-none">
-	<h3>Bible</h3>
+	<h3 class="flex justify-between items-center">
+		Bible
+
+		{#if filtered_examples.length < all_examples.length}
+			<small class="badge badge-md badge-warning">
+				{filtered_examples.length} of {all_examples.length} examples
+			</small>
+		{/if}
+	</h3>
 
 	{#await load_examples(concept)}
 		<span class="loading loading-spinner text-warning" />
