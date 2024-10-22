@@ -1,5 +1,5 @@
 <script>
-	import { createEventDispatcher } from 'svelte'
+	import { createEventDispatcher, onMount } from 'svelte'
 	import { derive_filters } from './filters'
 
 	/** @type { Concept } */
@@ -10,7 +10,12 @@
 
 	const dispatch = createEventDispatcher()
 
-	$: filters = derive_filters(concept, examples)
+	/** @type { import('.').Filters } */
+	let filters = new Map()
+
+	onMount(() => {
+		filters = derive_filters(concept, examples)
+	})
 
 	/**
 	 * converts things like "Topic NP" to "Topic_NP" or "Outer Adverb" to "Outer_Adverb" so they can be
@@ -35,8 +40,8 @@
 	}
 
 	/**
-	 * @typedef { Record<ContextArgumentNameNormalized, import('.').Option> } SelectedFilters – Had to choose an object-based approach here
-	 * 	because Svelte doesn't support binding a Map to a select.
+	 * @typedef { Record<ContextArgumentNameNormalized, import('.').Option> } SelectedFilters – Had to choose an object-based
+	 * 	approach because Svelte doesn't support binding a Map to a select.
 	 *
 	 * @type { SelectedFilters }
 	 */
