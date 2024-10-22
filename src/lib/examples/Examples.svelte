@@ -46,15 +46,7 @@
 </script>
 
 <article class="bg-base-200 p-4 flex flex-col gap-4 prose max-w-none">
-	<h3 class="flex justify-between items-center">
-		Bible
-
-		{#if filtered_examples.length < all_examples.length}
-			<small class="badge badge-md badge-warning">
-				{filtered_examples.length} of {all_examples.length} examples
-			</small>
-		{/if}
-	</h3>
+	<h3>Bible</h3>
 
 	{#await load_examples(concept)}
 		<span class="loading loading-spinner text-warning" />
@@ -62,13 +54,21 @@
 	{:then}
 		<Filters {concept} examples={all_examples} on:data-filtered={({ detail }) => (filtered_examples = detail)} />
 
-		{#if filtered_examples.length > MAX_EXAMPLES_DISPLAYED}
-			<section transition:fade={FADE_CHARACTERISTICS} class="alert alert-warning">
-				<Icon icon="ci:triangle-warning" class="h-7 w-7" />
+		<section transition:fade={FADE_CHARACTERISTICS} class="flex">
+			{#if filtered_examples.length < all_examples.length}
+				<div class="badge badge-md badge-warning whitespace-nowrap mr-4">
+					{filtered_examples.length} of {all_examples.length} examples
+				</div>
+			{/if}
 
-				<span>Only showing the first <span class="font-mono">{MAX_EXAMPLES_DISPLAYED}</span> matching examples</span>
-			</section>
-		{/if}
+			{#if filtered_examples.length > MAX_EXAMPLES_DISPLAYED}
+				<div class="alert alert-warning">
+					<Icon icon="ci:triangle-warning" class="h-7 w-7" />
+
+					<span>Only showing the first <span class="font-mono">{MAX_EXAMPLES_DISPLAYED}</span> matching examples</span>
+				</div>
+			{/if}
+		</section>
 
 		{#each filtered_examples.sort(by_book_order).slice(0, MAX_EXAMPLES_DISPLAYED) as { reference, context }, i}
 			{@const { id_primary, id_secondary, id_tertiary } = reference}

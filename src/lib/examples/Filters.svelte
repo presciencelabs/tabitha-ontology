@@ -95,7 +95,7 @@
 </script>
 
 
-<section class="join gap-4 bg-info text-info-content px-4 pb-4 mb-4 overflow-x-auto">
+<section class="join gap-4 bg-info text-info-content px-4 pb-4 overflow-x-auto">
 	{#each filters as [name, options]}
 		{@const normalized_name = normalize_name(name)}
 
