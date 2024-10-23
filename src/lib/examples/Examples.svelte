@@ -89,14 +89,20 @@
 
 			<details on:toggle={event => handle_queue(event, i)} transition:fade={FADE_CHARACTERISTICS} class="collapse collapse-arrow bg-base-100">
 				<summary class="collapse-title border border-base-200">
-					{id_primary} {id_secondary}:{id_tertiary}
-
-					{#each Object.entries(context) as [key, value]}
-						<span class="badge badge-info p-4 badge-outline ml-2">
-							<em>{key}: </em>
-							<strong class="ml-2 text-info font font-semibold">{value}</strong>
+					<section class="flex">
+						<span >
+							{id_primary} {id_secondary}:{id_tertiary}
 						</span>
-					{/each}
+
+						<aside class="flex flex-wrap gap-y-2">
+							{#each Object.entries(context) as [key, value]}
+								<span class="badge badge-info p-4 badge-outline ml-2">
+									<em>{key}: </em>
+									<strong class="ml-2 text-info font font-semibold">{value}</strong>
+								</span>
+							{/each}
+						</aside>
+					</section>
 				</summary>
 
 				<section class="collapse-content">
