@@ -90,7 +90,7 @@
 			<details on:toggle={event => handle_queue(event, i)} transition:fade={FADE_CHARACTERISTICS} class="collapse collapse-arrow bg-base-100">
 				<summary class="collapse-title border border-base-200">
 					<section class="flex">
-						<span >
+						<span class="min-w-1/6 w-1/6 flex-shrink-0 whitespace-nowrap">
 							{id_primary} {id_secondary}:{id_tertiary}
 						</span>
 
