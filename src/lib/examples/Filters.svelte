@@ -1,6 +1,7 @@
 <script>
 	import { createEventDispatcher, onMount } from 'svelte'
 	import { derive_filters } from './filters'
+	import { fade } from 'svelte/transition'
 
 	/** @type { Concept } */
 	export let concept
@@ -9,6 +10,10 @@
 	export let examples
 
 	const dispatch = createEventDispatcher()
+	const FADE_CHARACTERISTICS = {
+		delay: 100,
+		duration: 700
+	}
 
 	/** @type { import('.').Filters } */
 	let filters = new Map()
@@ -94,21 +99,34 @@
 	}
 </script>
 
+<section class="join join-vertical">
+	<form class="join gap-4 bg-info text-info-content px-4 pb-4 overflow-x-auto join-item">
+		{#each filters as [name, options]}
+			{@const normalized_name = normalize_name(name)}
 
-<section class="join gap-4 bg-info text-info-content px-4 pb-4 overflow-x-auto">
-	{#each filters as [name, options]}
-		{@const normalized_name = normalize_name(name)}
+			<label class="join-item flex flex-col">
+				<span class="label">{name}</span>
 
-		<label class="join-item flex flex-col">
-			<span class="label">{name}</span>
+				<select bind:value={selected_filters[normalized_name]} class="select text-base-content">
+					{#each [...options] as option, i}
+						{@const is_first_option = i === 0}
 
-			<select bind:value={selected_filters[normalized_name]} class="select text-base-content">
-				{#each [...options] as option, i}
-					{@const is_first_option = i === 0}
+						<option value={option} selected={is_first_option}>{option}</option>
+					{/each}
+				</select>
+			</label>
+		{/each}
+	</form>
 
-					<option value={option} selected={is_first_option}>{option}</option>
-				{/each}
-			</select>
-		</label>
-	{/each}
+	{#if filtered_examples.length > 0 && filtered_examples.length < examples.length}
+		<aside transition:fade={FADE_CHARACTERISTICS} class="alert alert-info join-item">
+			<span>
+				Showing
+				<span class="font-mono">{filtered_examples.length}</span>
+				out of
+				<span class="font-mono">{examples.length}</span>
+				examples.
+			</span>
+		</aside>
+	{/if}
 </section>
