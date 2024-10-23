@@ -9,7 +9,7 @@
 	/** @type { Concept } */
 	export let concept
 
-	const MAX_EXAMPLES_DISPLAYED = 100
+	const MAX_EXAMPLES_DISPLAYED = 50
 
 	/** @type { Example[] } */
 	let all_examples = []
@@ -54,20 +54,34 @@
 	{:then}
 		<Filters {concept} examples={all_examples} on:data-filtered={({ detail }) => (filtered_examples = detail)} />
 
-		<section transition:fade={FADE_CHARACTERISTICS} class="flex">
-			{#if filtered_examples.length < all_examples.length}
-				<div class="badge badge-md badge-warning whitespace-nowrap mr-4">
-					{filtered_examples.length} of {all_examples.length} examples
-				</div>
-			{/if}
+		<section class="grid grid-cols-2 gap-2 items-center">
+			<div>
+				{#if filtered_examples.length > MAX_EXAMPLES_DISPLAYED}
+					<aside transition:fade={FADE_CHARACTERISTICS} class="alert alert-warning max-w-fit">
+						<Icon icon="ci:triangle-warning" class="h-7 w-7" />
 
-			{#if filtered_examples.length > MAX_EXAMPLES_DISPLAYED}
-				<div class="alert alert-warning">
-					<Icon icon="ci:triangle-warning" class="h-7 w-7" />
+						<span>
+							Only showing the first
+							<span class="font-mono">{MAX_EXAMPLES_DISPLAYED}</span>
+							matching examples
+						</span>
+					</aside>
+				{/if}
+			</div>
 
-					<span>Only showing the first <span class="font-mono">{MAX_EXAMPLES_DISPLAYED}</span> matching examples</span>
-				</div>
-			{/if}
+			<div
+				transition:fade={FADE_CHARACTERISTICS}
+				class="badge badge-lg max-w-fit justify-self-end"
+				class:badge-success={filtered_examples.length === all_examples.length}
+				class:badge-warning={filtered_examples.length < all_examples.length}
+				class:badge-error={filtered_examples.length === 0}
+			>
+				<span>
+					<span class="font-mono">{filtered_examples.length}</span>
+					of
+					<span class="font-mono">{all_examples.length}</span>
+				</span>
+			</div>
 		</section>
 
 		{#each filtered_examples.sort(by_book_order).slice(0, MAX_EXAMPLES_DISPLAYED) as { reference, context }, i}
