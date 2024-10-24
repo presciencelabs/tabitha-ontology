@@ -9,7 +9,7 @@
 
 import { context_argument_map } from './examples'
 import { by_book_order, derive_filters } from './filters'
-import { Examples } from './Examples.svelte'
+import Examples from './Examples.svelte'
 import ExampleSummary from './ExampleSummary.svelte'
 import Filters from './Filters.svelte'
 import SourceData from './SourceData.svelte'
