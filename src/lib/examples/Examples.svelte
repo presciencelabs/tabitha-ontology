@@ -1,10 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte'
-	import SourceData from './SourceData.svelte'
-	import TargetData from './TargetData.svelte'
+	import { by_book_order, ExampleSummary, Filters, SourceData, TargetData } from '.'
 	import { fade } from 'svelte/transition'
-	import Filters from './Filters.svelte'
-	import { by_book_order } from './filters'
 
 	/** @type { Concept } */
 	export let concept
@@ -59,20 +56,7 @@
 
 			<details on:toggle={event => handle_queue(event, i)} transition:fade={FADE_CHARACTERISTICS} class="collapse collapse-arrow bg-base-100">
 				<summary class="collapse-title border border-base-200">
-					<section class="flex">
-						<span class="min-w-1/6 w-1/6 flex-shrink-0 whitespace-nowrap">
-							{id_primary} {id_secondary}:{id_tertiary}
-						</span>
-
-						<aside class="flex flex-wrap gap-y-2">
-							{#each Object.entries(context) as [key, value]}
-								<span class="badge badge-info p-4 badge-outline ml-2">
-									<em>{key}: </em>
-									<strong class="ml-2 text-info font font-semibold">{value}</strong>
-								</span>
-							{/each}
-						</aside>
-					</section>
+					<ExampleSummary {reference} {context} />
 				</summary>
 
 				<section class="collapse-content">

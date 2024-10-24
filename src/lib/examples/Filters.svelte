@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher, onMount } from 'svelte'
-	import { derive_filters } from './filters'
+	import { derive_filters } from '.'
 	import { fade } from 'svelte/transition'
 
 	/** @type { Concept } */

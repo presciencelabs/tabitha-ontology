@@ -1,5 +1,5 @@
 import { bible_books } from '$lib/lookups'
-import { context_argument_map } from './examples'
+import { context_argument_map } from '.'
 
 /**
  * Example data:
