@@ -15,7 +15,7 @@
 		duration: 700
 	}
 
-	/** @type { import('.').Filters } */
+	/** @type { Filters } */
 	let filters = new Map()
 
 	onMount(() => {
@@ -45,7 +45,7 @@
 	}
 
 	/**
-	 * @typedef { Record<ContextArgumentNameNormalized, import('.').Option> } SelectedFilters – Had to choose an object-based
+	 * @typedef { Record<ContextArgumentNameNormalized, Option> } SelectedFilters – Had to choose an object-based
 	 * 	approach because Svelte doesn't support binding a Map to a select.
 	 *
 	 * @type { SelectedFilters }
@@ -69,7 +69,7 @@
 		function is_a_match(example) {
 			return Object.entries(filters).every(satisfies_filter)
 
-			/** @param { [ContextArgumentNameNormalized, import('.').Option] } filter */
+			/** @param { [ContextArgumentNameNormalized, Option] } filter */
 			function satisfies_filter([normalized_name, option]) {
 				const argument_name = denormalize_name(normalized_name)
 
@@ -121,11 +121,9 @@
 	{#if filtered_examples.length > 0 && filtered_examples.length < examples.length}
 		<aside transition:fade={FADE_CHARACTERISTICS} class="alert alert-info join-item">
 			<span>
-				Showing
+				Matched
 				<span class="font-mono">{filtered_examples.length}</span>
-				out of
-				<span class="font-mono">{examples.length}</span>
-				examples.
+				{filtered_examples.length === 1 ? 'example' : 'examples'}
 			</span>
 		</aside>
 	{/if}
