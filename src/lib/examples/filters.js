@@ -1,5 +1,54 @@
 import { bible_books } from '$lib/lookups'
-import { context_argument_map } from '.'
+
+/** @type { ContextArgumentMap } */
+export const context_argument_map = new Map([
+	['Noun', [
+		'Verb',
+		'Role',
+		'Adposition',
+		'Outer Noun',
+		'Outer Adjective',
+		'Outer Adverb',
+	]],
+	['Verb', [
+		'Topic NP',
+		'Polarity',
+		'Agent',
+		'Patient',
+		'State',
+		'Source',
+		'Destination',
+		'Instrument',
+		'Beneficiary',
+		'Addressee',
+		'Predicate Adjective',
+		'Propositional Agent',
+		'Propositional Patient',
+	]],
+	['Adjective', [
+		'Degree',
+		'Verb',
+		'Agent',
+		'Modified Noun',
+		'Modified Adjective',
+		'Patient Noun',
+		'Patient Clause',
+		'Usage',
+	]],
+	['Adverb', [
+		'Degree',
+		'Verb',
+		'Modified Noun',
+		'Modified Adjective',
+	]],
+	['Adposition', [
+		'Noun',
+		'Verb',
+		'Adjective',
+		'Outer Noun',
+		'Outer Adjective',
+	]],
+])
 
 /**
  * Example data:
@@ -39,17 +88,17 @@ import { context_argument_map } from '.'
  *
  * @param { Concept } concept
  * @param { Example[] } examples
- * @returns { import('.').Filters }
+ * @returns { FilterMap }
  */
 export function derive_filters(concept, examples) {
-	/** @type { import('.').Filters } */
+	/** @type { FilterMap } */
 	const filters = new Map()
 
 	// The Book filter has to be handled separately because it's a little different than the context filters.
 	const book_names_found_in_examples = examples.sort(by_book_order).map(book_name)
 	filters.set('Book', new Set(['Any', ...book_names_found_in_examples]))
 
-	/** @type { import('.').Filters } */
+	/** @type { FilterMap } */
 	const context_filters = initialize_filter_map().get(concept.part_of_speech) ?? new Map()
 
 	/**
@@ -95,27 +144,27 @@ export function derive_filters(concept, examples) {
 	}
 
 	function initialize_filter_map() {
-		/** @type { import('.').FilterMap } */
-		const filter_map = new Map()
+		/** @type { FilterRulesMap } */
+		const filter_rules_map = new Map()
 
 		for (const [part_of_speech, args] of context_argument_map.entries()) {
-			/** @type { import('.').Filters } */
-			const filters = new Map()
+			/** @type { FilterMap } */
+			const filter_map = new Map()
 
 			for (const filter_name of args) {
-				/** @type { import('.').Options } */
+				/** @type { Options } */
 				const options = new Set()
 
-				filters.set(filter_name, options)
+				filter_map.set(filter_name, options)
 			}
 
-			filter_map.set(part_of_speech, filters)
+			filter_rules_map.set(part_of_speech, filter_map)
 		}
 
-		return filter_map
+		return filter_rules_map
 	}
 
-	/** @param { [ContextArgumentName, import('.').Options] } filters  */
+	/** @param { [ContextArgumentName, Options] } filter_map  */
 	function has_options([, options]) {
 		return options.size > 0
 	}

@@ -12,10 +12,10 @@
 	const dispatch = createEventDispatcher()
 	const FADE_CHARACTERISTICS = {
 		delay: 100,
-		duration: 700
+		duration: 700,
 	}
 
-	/** @type { Filters } */
+	/** @type { FilterMap } */
 	let filters = new Map()
 
 	onMount(() => {

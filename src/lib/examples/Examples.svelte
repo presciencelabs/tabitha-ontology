@@ -23,7 +23,7 @@
 
 	const FADE_CHARACTERISTICS = {
 		delay: 100,
-		duration: 700
+		duration: 700,
 	}
 
 	/** @type { number[] } */
@@ -49,11 +49,9 @@
 		<span class="loading loading-spinner text-warning" />
 		loading the examples...
 	{:then}
-		<Filters {concept} examples={all_examples} on:data-filtered={({ detail }) => (filtered_examples = detail)} />
+		<Filters {concept} examples={all_examples} on:data-filtered={({ detail }) => filtered_examples = detail} />
 
 		{#each filtered_examples.sort(by_book_order).slice(0, MAX_EXAMPLES_DISPLAYED) as { reference, context }, i}
-			{@const { id_primary, id_secondary, id_tertiary } = reference}
-
 			<details on:toggle={event => handle_queue(event, i)} transition:fade={FADE_CHARACTERISTICS} class="collapse collapse-arrow bg-base-100">
 				<summary class="collapse-title border border-base-200">
 					<ExampleSummary {reference} {context} />
