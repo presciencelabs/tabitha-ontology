@@ -1,7 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte'
 	import { PUBLIC_SOURCES_API_HOST } from '$env/static/public'
-	import SemanticEncoding from '$lib/SemanticEncoding.svelte'
+	import { SemanticEncoding } from '$lib'
 
 	/** @type {Reference} */
 	export let reference
