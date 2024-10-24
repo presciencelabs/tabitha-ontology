@@ -1,6 +1,6 @@
 <script>
 	import Icon from '@iconify/svelte'
-	import { by_book_order, ExampleSummary, Filters, SourceData, TargetData } from '.'
+	import { by_book_order, ExampleSummary, Filters, SourceData, TargetData } from '$lib/examples'
 	import { fade } from 'svelte/transition'
 
 	/** @type { Concept } */
