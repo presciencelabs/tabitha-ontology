@@ -6,6 +6,8 @@ Available at [https://ontology.tbta.bible](https://ontology.tbta.bible)
 
 `https://ontology.tbta.bible/search?q=love[&scope=[**stems**|glosses|all]]`
 
+`http://localhost.tbta.bible:5173/simplification_hints?complex_term=disciple`
+
 ## Local development
 
 `pnpm i`
