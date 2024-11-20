@@ -16,11 +16,11 @@ Available at [https://ontology.tbta.bible](https://ontology.tbta.bible)
 
 #### 1. Load the database
 
-Dump files can be found in https://github.com/presciencelabs/tabitha-databases/tree/main/databases
-
 Running the following command will load the data locally:
 
 `wrangler d1 execute <DB_NAME_FROM_WRANGLER_TOML_FILE> --file=<DB_NAME_FROM_WRANGLER_TOML_FILE>.tabitha.sqlite.sql`
+
+> dump files can be found in https://github.com/presciencelabs/tabitha-databases/tree/main/databases
 
 #### 2. Configure local auth
 
