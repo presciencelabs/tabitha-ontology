@@ -19,6 +19,7 @@
 		"clean:powerwash": "(pnpm clean:svelte & pnpm clean:node) && pnpm install"
 	},
 	"dependencies": {
+		"@auth/sveltekit": "^1.7.3",
 		"@sveltejs/kit": "^2.8.0",
 		"@tailwindcss/typography": "^0.5.15",
 		"daisyui": "^4.12.14",
