@@ -3,7 +3,7 @@
 	import { Brand, Search } from '$lib'
 	import { Selector } from '$lib/theme'
 	import { signIn, signOut } from '@auth/sveltekit/client'
-    import Icon from '@iconify/svelte';
+	import Icon from '@iconify/svelte'
 
 	let { data, children } = $props()
 
@@ -19,7 +19,7 @@
 <!-- layout not handled by daisyUI, https://daisyui.com/docs/layout-and-typography -->
 
 <header class="grid grid-cols-[auto_1fr] mx-8 mt-8">
-	<Brand />
+	<Brand {version} />
 
 	<Search autofocus />
 </header>
@@ -56,10 +56,5 @@
 				Sign in to see additional features
 			</button>
 		{/if}
-
-		<!-- https://daisyui.com/components/link -->
-		<a href="//alltheword.org/downloads-software-bible" target="_blank" class="font-mono link link-hover">
-			{version}
-		</a>
 	</nav>
 </footer>
