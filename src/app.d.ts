@@ -7,6 +7,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			db: D1Database
+			user: User | undefined
 		}
 		// interface PageData {}
 
@@ -14,6 +15,10 @@ declare global {
 			// Cloudflare-specific
 			env: {
 				DB_Ontology: D1Database // see wrangler.toml to match this name
+
+				AUTH_SECRET: string
+				GOOGLE_OAUTH_CLIENT_ID: string
+				GOOGLE_OAUTH_CLIENT_SECRET: string
 			}
 		}
 	}
