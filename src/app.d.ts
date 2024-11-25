@@ -6,7 +6,8 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			db: D1Database
+			db_ontology: D1Database
+			db_auth: D1Database
 			user: User | undefined
 		}
 		// interface PageData {}
@@ -16,6 +17,7 @@ declare global {
 			env: {
 				DB_Ontology: D1Database // see wrangler.toml to match this name
 
+				DB_Auth: D1Database		// see wrangler.toml to match this name
 				AUTH_SECRET: string
 				GOOGLE_OAUTH_CLIENT_ID: string
 				GOOGLE_OAUTH_CLIENT_SECRET: string

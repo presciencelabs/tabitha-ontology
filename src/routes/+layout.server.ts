@@ -1,12 +1,9 @@
 import { get_version } from '$lib/server/ontology'
-import { error } from '@sveltejs/kit'
+import type { LayoutServerLoadEvent } from './$types'
+import type { User } from '@auth/sveltekit'
 
-export async function load({ locals, platform }) {
-	if (!platform?.env.DB_Ontology) {
-		throw error(500, `database missing from platform arg: ${JSON.stringify(platform)}`)
-	}
-
-	const version = await get_version(platform.env.DB_Ontology)
+export async function load({ locals }: LayoutServerLoadEvent): Promise<{ user: User | undefined, version: string}> {
+	const version = await get_version(locals.db_ontology)
 
 	const session = await locals.auth()
 

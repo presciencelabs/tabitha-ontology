@@ -22,7 +22,8 @@ const db_config_handle: Handle = async function db_config_handle({ event, resolv
 		throw error(500, `database missing from platform arg: ${JSON.stringify(event.platform)}`)
 	}
 
-	event.locals.db = event.platform?.env.DB_Ontology
+	event.locals.db_ontology = event.platform?.env.DB_Ontology
+	event.locals.db_auth = event.platform?.env.DB_Auth
 
 	return resolve(event)
 }
@@ -51,13 +52,24 @@ const authz_handle: Handle = async ({event, resolve}) => {
 	return resolve(event)
 
 	async function authz(event: RequestEvent) {
+		const AUTH_ERROR_MESSAGE = 'You must be signed in and have permission to access this page'
 		const { route, locals } = event
 
 		if (route.id?.startsWith('/protected')) {
 			const session = await locals.auth()
 
 			if (!session?.user) {
-				throw error(401, 'You must be signed in and have permission to access this page')
+				throw error(401, AUTH_ERROR_MESSAGE)
+			}
+
+			const sql = `
+				SELECT true AS found
+				FROM Users
+				WHERE email = ? AND app = ?
+			`
+			const found = await locals.db_auth.prepare(sql).bind(session.user.email, 'ontology').first('found')
+			if (!found) {
+				throw error(401, AUTH_ERROR_MESSAGE)
 			}
 		}
 	}
