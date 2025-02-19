@@ -10,8 +10,6 @@
 	/** @type {SourceConcept}*/
 	export let selected_concept
 
-	console.log(selected_concept)
-
 	const main_clauses = source_entities.reduce(clause_reducer, [])
 
 	/**
