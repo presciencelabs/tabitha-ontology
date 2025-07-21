@@ -1,6 +1,3 @@
-TODO: themes are broken now, gotta fix those.
-TODO: daisy theme renamed from halloween to reformation
-
 # Ontology web app
 
 Available at [https://ontology.tbta.bible](https://ontology.tbta.bible)
