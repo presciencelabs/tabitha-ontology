@@ -1,12 +1,15 @@
+TODO: themes are broken now, gotta fix those.
+TODO: daisy theme renamed from halloween to reformation
+
 # Ontology web app
 
 Available at [https://ontology.tbta.bible](https://ontology.tbta.bible)
 
 ## API
 
-`https://ontology.tbta.bible/search?q=love[&scope=[**stems**|glosses|all]]`
+`/search?q=love[&scope=[**stems**|glosses|all]]`
 
-`http://localhost.tbta.bible:5173/simplification_hints?complex_term=disciple`
+`/simplification_hints?complex_term=disciple`
 
 ## Local development
 
@@ -61,7 +64,3 @@ Run the following command as a last check before opening a PR
 ```bash
 pnpm precommit
 ```
-
-## Error handling
-
-TODO: will integrate Sentry once https://github.com/getsentry/sentry-javascript/issues/8291 is fixed.
