@@ -47,7 +47,7 @@
 					<Level level={concept.level} />
 				</td>
 				<td class="text-center">
-					<Occurrences occurrences={concept.occurrences} />
+					<Occurrences {concept} />
 				</td>
 			</tr>
 		{/each}

@@ -5,7 +5,6 @@
 	export let concept
 
 	$: level = concept.level
-	$: occurrences = concept.occurrences
 </script>
 
 <h2 class="relative whitespace-nowrap pb-6">
@@ -17,5 +16,5 @@
 <aside class="flex flex-col items-center gap-1 self-start">
 	<Level {level} />
 
-	<Occurrences {occurrences} />
+	<Occurrences {concept} />
 </aside>

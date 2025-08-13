@@ -10,11 +10,14 @@
 		'Inexplicable',
 	]
 
-	$: description = level_descriptions[parseInt(level)] || ''
+	$: level_int = parseInt(level)
+	$: description = level_int ? level_descriptions[level_int] : 'Not in the ontology'
+	$: level_class = level_int ? `L${level}` : 'badge-neutral'
+	$: level_display = level_int ? `L${level}` : level
 </script>
 
-<span class={`badge L${level} badge-lg tooltip tooltip-left font-mono`} data-tip={description}>
-	L{level}
+<span class={`badge ${level_class} badge-lg tooltip tooltip-left font-mono`} data-tip={description}>
+	{level_display}
 </span>
 
 <style>

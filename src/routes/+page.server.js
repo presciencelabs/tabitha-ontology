@@ -16,27 +16,23 @@ export async function load({ url: { searchParams }, locals: { db_ontology } }) {
 	// filter out the how-to matches that are not associated with a concept
 	const unlinked_how_to_matches = how_to_matches.filter(hint =>
 		!matches.some(match => `${match.stem}-${match.sense}` === hint.term && hint.part_of_speech === match.part_of_speech))
+
 	// if a remaining how-to result has a sense, it is pending entry into the ontology and should be treated as a concept
-	const pending_concepts = unlinked_how_to_matches.filter(hint => ends_in_a_sense(hint.term)).map(create_pending_concept)
+	const pending_results = unlinked_how_to_matches.filter(hint => ends_in_a_sense(hint.term)).map(create_pending_result)
 	const how_to_hints = unlinked_how_to_matches.filter(hint => !ends_in_a_sense(hint.term))
 	
 	// group the remaining entries by term and part_of_speech, so we can show all hints for a given term together
-	const how_to_results = Object.entries(Object.groupBy(how_to_hints, hint => `${hint.term}|${hint.part_of_speech}`)).map(([key, group]) => {
-		const [term, part_of_speech] = key.split('|')
-		return {
-			term,
-			part_of_speech,
-			hints: group ?? [],
-		}
-	})
+	const how_to_results = [...new Set(how_to_hints.map(hint => `${hint.term}|${hint.part_of_speech}`))].map(create_how_to_result)
 
-	const concepts = [...matches, ...pending_concepts]
+	const results = [
+		...matches,
+		...pending_results,
+		...how_to_results,
+	]
 
-	const results = {
-		concepts,
-		how_to_results,
+	return {
+		results,
 	}
-	return { results }
 
 	/**
 	 * @param {string} term
@@ -48,15 +44,39 @@ export async function load({ url: { searchParams }, locals: { db_ontology } }) {
 	}
 
 	/**
+	 * @param {string} concept_key 
+	 * @returns {Concept}
+	 */
+	function create_how_to_result(concept_key) {
+		const [term, part_of_speech] = concept_key.split('|')
+		// at this point, this term will not have a sense
+		return {
+			id: term,
+			stem: term,
+			sense: '',
+			part_of_speech,
+			level: 'N/A',
+			categorization: '',
+			examples: '',
+			gloss: 'Not in Ontology, and is not planned to be.',
+			brief_gloss: '',
+			occurrences: 0,
+			categories: [],
+			curated_examples: [],
+			status: 'absent',
+		}
+	}
+
+	/**
 	 * 
 	 * @param {SimplificationHint} hint 
 	 * @returns {Concept}
 	 */
-	function create_pending_concept(hint) {
+	function create_pending_result(hint) {
 		const matches = hint.term.match(/^(.*)-([A-Z])$/)
 		const [stem, sense] = matches ? [matches[1], matches[2]] : [hint.term, 'A']
 		return {
-			id: '',
+			id: hint.term,
 			stem,
 			sense,
 			part_of_speech: hint.part_of_speech,
@@ -68,12 +88,16 @@ export async function load({ url: { searchParams }, locals: { db_ontology } }) {
 			occurrences: 0,
 			categories: [],
 			curated_examples: [],
+			status: 'pending',
 		}
 
 		function guess_level() {
-			if (hint.ontology_status.toLowerCase().includes('simple')) {
+			const LEVEL_1_REGEX = /level 1|simple/
+			const LEVEL_3_REGEX = /level 3|complex alternate/
+			const lower_status = hint.ontology_status.toLowerCase()
+			if (LEVEL_1_REGEX.test(lower_status)) {
 				return '1'
-			} else if (hint.ontology_status.includes('3')) {
+			} else if (LEVEL_3_REGEX.test(lower_status) || LEVEL_3_REGEX.test(hint.explication.toLowerCase())) {
 				return '3'
 			} else {
 				return '2'

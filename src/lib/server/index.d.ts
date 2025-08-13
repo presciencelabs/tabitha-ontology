@@ -25,18 +25,10 @@ interface Concept extends DbRowConcept {
 	categories: string[]
 	curated_examples: CuratedExample[]
 	occurrences: number
+	status: OntologyStatus
 }
 
-type HowToResult = {
-	term: string
-	part_of_speech: string
-	hints: SimplificationHint[]
-}
-
-type SearchResult = {
-	concepts: Concept[]
-	how_to_hints: HowToResult[]
-}
+type OntologyStatus = 'present' | 'pending' | 'absent'
 
 type ConceptSearchFilter = {
 	q: string
