@@ -44,7 +44,7 @@
 					{concept.gloss}
 				</td>
 				<td>
-					<Level level={concept.level} />
+					<Level {concept} />
 				</td>
 				<td class="text-center">
 					<Occurrences {concept} />

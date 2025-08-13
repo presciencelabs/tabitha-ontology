@@ -99,7 +99,7 @@ export const get_filtered_simplification_hints = db => async filter => {
 		 * @type {{ [k: string]: FilterArgs }}
 		 */
 		const scope_filters = {
-			stems: ['term LIKE ?', [normalized_q]],
+			stems: ['(term LIKE ? OR term LIKE ?)', [normalized_q, `${normalized_q}-_`]],
 			glosses: ['explication LIKE ?', [`%${normalized_q}%`]],
 			all: ['term LIKE ? OR explication LIKE ?', [normalized_q, `%${normalized_q}%`]],
 		}
