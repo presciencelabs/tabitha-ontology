@@ -1,7 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte' // https://iconify.design/
 	import { page } from '$app/stores'
-	import { DisplayPreference, SummaryCard, Table } from '$lib'
+	import { DisplayPreference, SummaryCard, SummaryCardHowTo, Table } from '$lib'
 
 	/** @type {import('./$types').PageData} */
 	export let data
@@ -10,7 +10,8 @@
 	let display_preference = 'grid'
 
 	$: searched = !!$page.url.search
-	$: matches = data.matches
+	$: matches = data.results.concepts
+	$: how_to_results = data.results.how_to_results
 	$: found = !!matches.length
 	$: icon = `material-symbols:${found ? 'check-circle' : 'warning'}-outline-rounded`
 
@@ -34,6 +35,9 @@
 	<section class="mt-8 flex flex-row flex-wrap gap-10">
 		{#each matches as concept (concept.id)}
 			<SummaryCard {concept} />
+		{/each}
+		{#each how_to_results as how_to (how_to.term)}
+			<SummaryCardHowTo {how_to} />
 		{/each}
 	</section>
 {:else}

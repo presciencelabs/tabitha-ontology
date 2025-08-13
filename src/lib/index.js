@@ -1,5 +1,5 @@
 import Brand from './Brand.svelte'
-import { DetailedCard, SummaryCard } from './card'
+import { DetailedCard, SummaryCard, SummaryCardHowTo } from './card'
 import Details from './Details.svelte'
 import DisplayPreference from './DisplayPreference.svelte'
 import { Examples } from './examples'
@@ -18,5 +18,6 @@ export {
 	Occurrences,
 	Search,
 	SummaryCard,
+	SummaryCardHowTo,
 	Table,
 }

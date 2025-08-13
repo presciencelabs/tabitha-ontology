@@ -18,6 +18,7 @@ type SimplificationHint = {
 	structure: string
 	pairing: string
 	explication: string
+	ontology_status: string
 }
 
 interface Concept extends DbRowConcept {
@@ -26,8 +27,15 @@ interface Concept extends DbRowConcept {
 	occurrences: number
 }
 
-type SearchFilter = {
-	[key: string]: string
+type HowToResult = {
+	term: string
+	part_of_speech: string
+	hints: SimplificationHint[]
+}
+
+type SearchResult = {
+	concepts: Concept[]
+	how_to_hints: HowToResult[]
 }
 
 type ConceptSearchFilter = {
@@ -65,3 +73,11 @@ type Reference = {
 	id_secondary: string
 	id_tertiary: string
 }
+
+type SimplifiedEncodingPhrase = {
+	part_of_speech: string
+	role: string
+	word: string
+}
+
+type SimplifiedSemanticEncoding =  SimplifiedEncodingPhrase[]
