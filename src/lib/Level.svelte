@@ -15,7 +15,7 @@
 	$: level_int = parseInt(level)
 	$: description = level_int >= 0 ? level_descriptions[level_int] : 'Not in the ontology'
 	$: level_class = level_int >= 0 ? `L${level}` : 'badge-neutral'
-	$: level_display = level_int >=0 ? `L${level}${concept.status === 'pending' ? '?' : ''}` : level
+	$: level_display = level_int >= 0 ? `L${level}${concept.status === 'pending' ? '?' : ''}` : level
 </script>
 
 <span class={`badge ${level_class} badge-lg tooltip tooltip-left font-mono`} data-tip={description}>
