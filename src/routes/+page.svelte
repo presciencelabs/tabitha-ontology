@@ -32,7 +32,7 @@
 
 {#if display_preference === 'grid'}
 	<section class="mt-8 flex flex-row flex-wrap gap-10">
-		{#each matches as concept (concept.id)}
+		{#each matches as concept (`${concept.stem}-${concept.sense}-${concept.part_of_speech}`)}
 			<SummaryCard {concept} show_how_to={matches.length <= 5} />
 		{/each}
 	</section>
