@@ -37,9 +37,9 @@
 			</section>
 		{/if}
 		
-		{#if show_how_to && concept.how_to_hints.length > 0 || ['2', '3'].includes(concept.level)}
+		{#if show_how_to && (concept.how_to_hints.length > 0 || ['2', '3'].includes(concept.level))}
 			<section class="prose mt-4 max-w-none">
-				<h3>{concept.status === 'absent' ? 'Explication hints' : 'Simplification hints'}</h3>
+				<h3 class="mb-0">Suggestion(s) for how to handle</h3>
 				<SimplificationHints {concept} />
 			</section>
 		{/if}
