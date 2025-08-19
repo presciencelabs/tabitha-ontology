@@ -11,26 +11,17 @@ const FUNCTION_WORDS = [
 	['here', "Becomes 'at this place'."],
 	['least', "Sets the Degree feature of an Adjective to 'least'."],
 	['may', 'Sets the Mood feature of a Verb to Permissive May.'],
-	['might', 'Sets the Mood feature of a Verb to Might Potential.'],
+	['might', 'Sets the Mood feature of a Verb to Might Potential, or used with if-A.'],
 	['must', 'Sets the Mood feature of a Verb to Must Obligation.'],
-	// ['not', 'Sets the Polarity feature of a Verb to Negative.'],
-	// ['of', 'Does many things...'],
 	['probably', 'Sets the Mood feature of a Verb to Definite Potential.'],
 	['should', 'Sets the Mood feature of a Verb to Should Obligation.'],
 	['start', 'Sets the Aspect feature of a Verb to Inceptive.'],
 	['stop', 'Sets the Aspect feature of a Verb to Cessative.'],
-	// ['than', 'Used with comparative Adjectives.'],
-	// ['that', 'Sets the Proximity feature of a Noun, or indicates a relative clause.'],
 	['there', "Becomes 'at this place', except when used with be-E."],
-	// ['these', 'Sets the Proximity feature of a Noun.'],
-	// ['this', 'Sets the Proximity feature of a Noun.'],
-	// ['those', 'Sets the Proximity feature of a Noun.'],
 	['too', "Sets the Degree feature of an Adjective to 'too'."],
 	['very', 'Sets the Degree feature of an Adjective to Intensified.'],
 	['with', 'Sometimes used to indicate the Instrument argument of a Verb.'],
-	['would', 'Used with so-C. Otherwise, cannot be used.'],
-	// ['who', 'Relativizer for people.'],
-	// ['whom', 'Relativizer for people.'],
+	['would', 'Used with so-C, if-B, or if-C. Otherwise, cannot be used.'],
 	['which', 'Indicates an interrogative Noun or a relative clause.'],
 ]
 
@@ -43,8 +34,8 @@ export function get_function_words(filter) {
 		return []
 	}
 
-	const query_regex = /^(?<pre_wildcard>[*%#]?)(?<term>.+?)(?<post_wildcard>[*%#]?)$/
-	const match = filter.q.match(query_regex)
+	const QUERY_REGEX = /^(?<pre_wildcard>[*%#]?)(?<term>.+?)(?<post_wildcard>[*%#]?)$/
+	const match = filter.q.match(QUERY_REGEX)
 	if (!match?.groups) {
 		return []
 	}
