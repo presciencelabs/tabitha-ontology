@@ -1,0 +1,97 @@
+/** @type {[string, string][]} */
+const FUNCTION_WORDS = [
+	['begin', 'Sets the Aspect feature of a Verb to Inceptive.'],
+	['certainly', 'Sets the Polarity feature of a Verb to Emphatic Affirmative/Negative.'],
+	['continue', 'Sets the Aspect feature of a Verb to Continuative.'],
+	['could', 'Used with so-A. Otherwise, use "be able".'],
+	['definitely', 'Sets the Mood feature of a Verb to Definite Potential.'],
+	['extremely', 'Sets the Degree feature of an Adjective to Extremely Intensified.'],
+	['finish', 'Sets the Aspect feature of a Verb to Completive.'],
+	['from', 'Usually indicates the Source argument of a Verb.'],
+	['here', "Becomes 'at this place'."],
+	['least', "Sets the Degree feature of an Adjective to 'least'."],
+	['may', 'Sets the Mood feature of a Verb to Permissive May.'],
+	['might', 'Sets the Mood feature of a Verb to Might Potential.'],
+	['must', 'Sets the Mood feature of a Verb to Must Obligation.'],
+	// ['not', 'Sets the Polarity feature of a Verb to Negative.'],
+	// ['of', 'Does many things...'],
+	['probably', 'Sets the Mood feature of a Verb to Definite Potential.'],
+	['should', 'Sets the Mood feature of a Verb to Should Obligation.'],
+	['start', 'Sets the Aspect feature of a Verb to Inceptive.'],
+	['stop', 'Sets the Aspect feature of a Verb to Cessative.'],
+	// ['than', 'Used with comparative Adjectives.'],
+	// ['that', 'Sets the Proximity feature of a Noun, or indicates a relative clause.'],
+	['there', "Becomes 'at this place', except when used with be-E."],
+	// ['these', 'Sets the Proximity feature of a Noun.'],
+	// ['this', 'Sets the Proximity feature of a Noun.'],
+	// ['those', 'Sets the Proximity feature of a Noun.'],
+	['too', "Sets the Degree feature of an Adjective to 'too'."],
+	['very', 'Sets the Degree feature of an Adjective to Intensified.'],
+	['with', 'Sometimes used to indicate the Instrument argument of a Verb.'],
+	['would', 'Used with so-C. Otherwise, cannot be used.'],
+	// ['who', 'Relativizer for people.'],
+	// ['whom', 'Relativizer for people.'],
+	['which', 'Indicates an interrogative Noun or a relative clause.'],
+]
+
+/**
+ * @param {ConceptSearchFilter} filter
+ * @returns {Concept[]}
+ */
+export function get_function_words(filter) {
+	if (!['all', ''].includes(filter.category) || filter.scope === 'glosses') {
+		return []
+	}
+
+	const query_regex = /^(?<pre_wildcard>[*%#]?)(?<term>.+?)(?<post_wildcard>[*%#]?)$/
+	const match = filter.q.match(query_regex)
+	if (!match?.groups) {
+		return []
+	}
+
+	const { pre_wildcard, term, post_wildcard } = match.groups
+	return FUNCTION_WORDS.filter(get_word_filter(pre_wildcard, term, post_wildcard)).map(transform_function_word)
+}
+
+/**
+ * @param {string} pre_wildcard
+ * @param {string} term
+ * @param {string} post_wildcard
+ * @returns {(word_and_gloss: [string, string]) => boolean}
+ */
+function get_word_filter(pre_wildcard, term, post_wildcard) {
+	const lower_term = term.toLowerCase()
+	
+	if (!pre_wildcard && post_wildcard) {
+		return ([word]) => word.startsWith(lower_term)
+	} else if (pre_wildcard && !post_wildcard) {
+		return ([word]) => word.endsWith(lower_term)
+	} else if (pre_wildcard && post_wildcard) {
+		return ([word]) => word.includes(lower_term)
+	} else {
+		return ([word]) => word === lower_term
+	}
+}
+
+/**
+ * @param {[string, string]} word_and_gloss
+ * @returns {Concept}
+ */
+function transform_function_word([word, gloss]) {
+	return {
+		id: `${word}-fw`,
+		stem: word,
+		sense: '',
+		part_of_speech: 'Function Word',
+		gloss,
+		level: 'FW',
+		categorization: '',
+		examples: '',
+		brief_gloss: '',
+		occurrences: 0,
+		categories: [],
+		curated_examples: [],
+		status: 'absent',
+		how_to_hints: [],
+	}
+}
