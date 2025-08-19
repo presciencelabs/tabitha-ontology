@@ -51,17 +51,18 @@ export function get_function_words(filter) {
  * @returns {(word_and_gloss: [string, string]) => boolean}
  */
 function get_word_filter(pre_wildcard, term, post_wildcard) {
+	const key = `${pre_wildcard ? 1 : 0}${post_wildcard ? 1 : 0}`
 	const lower_term = term.toLowerCase()
-	
-	if (!pre_wildcard && post_wildcard) {
-		return ([word]) => word.startsWith(lower_term)
-	} else if (pre_wildcard && !post_wildcard) {
-		return ([word]) => word.endsWith(lower_term)
-	} else if (pre_wildcard && post_wildcard) {
-		return ([word]) => word.includes(lower_term)
-	} else {
-		return ([word]) => word === lower_term
+
+	/** @type {Record<string, (word_and_gloss: [string, string]) => boolean>} */
+	const filterMap = {
+		'00': ([word]) => word === lower_term,
+		'10': ([word]) => word.endsWith(lower_term),
+		'01': ([word]) => word.startsWith(lower_term),
+		'11': ([word]) => word.includes(lower_term),
 	}
+
+	return filterMap[key]
 }
 
 /**
