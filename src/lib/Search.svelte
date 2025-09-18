@@ -24,6 +24,7 @@
 
 	/** @param {HTMLInputElement} input */
 	function auto_focus(input) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		autofocus && input.focus()
 	}
 
