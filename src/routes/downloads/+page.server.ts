@@ -1,10 +1,10 @@
+// TODO: remove when this is fixed https://github.com/cloudflare/workers-sdk/issues/10755
+import { DOMParser as XDOMParser } from '@xmldom/xmldom'
+globalThis.DOMParser = XDOMParser
 import { S3Client, ListObjectsV2Command, type _Object } from '@aws-sdk/client-s3'
 import type { PageServerLoad } from './$types'
 import { CLOUDFLARE_ACCOUNT_ID, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY } from '$env/static/private'
 
-// TODO: remove when this is fixed https://github.com/cloudflare/workers-sdk/issues/10755
-import { DOMParser as XDOMParser } from '@xmldom/xmldom'
-globalThis.DOMParser = XDOMParser
 
 type Backup = {
 	name: string,
