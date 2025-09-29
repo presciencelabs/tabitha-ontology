@@ -1,6 +1,7 @@
 import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import type { PageServerLoad } from './$types'
 import { CLOUDFLARE_ACCOUNT_ID, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY } from '$env/static/private'
+import { NodeHttpHandler } from '@smithy/node-http-handler'
 
 type Backup = {
 	name: string,
@@ -19,6 +20,7 @@ export const load: PageServerLoad = async () => {
 			accessKeyId: S3_ACCESS_KEY_ID,
 			secretAccessKey: S3_SECRET_ACCESS_KEY,
 		},
+		requestHandler: new NodeHttpHandler(),
 	})
 
 	const objects = await S3.send(new ListObjectsV2Command({
