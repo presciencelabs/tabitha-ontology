@@ -21,9 +21,9 @@
 	"dependencies": {
 		"@auth/sveltekit": "^1.10.0",
 		"@aws-sdk/client-s3": "^3.899.0",
-		"@smithy/node-http-handler": "^4.2.1",
 		"@sveltejs/kit": "^2.43.5",
 		"@tailwindcss/typography": "^0.5.19",
+		"@xmldom/xmldom": "^0.8.11",
 		"daisyui": "^5.1.25",
 		"svelte": "^5.39.6",
 		"tailwindcss": "^4.1.13"
