@@ -1,4 +1,4 @@
-import { S3Client, ListObjectsV2Command, type _Object } from '@aws-sdk/client-s3'
+import { S3Client, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import type { PageServerLoad } from './$types'
 import { CLOUDFLARE_ACCOUNT_ID, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY } from '$env/static/private'
 
