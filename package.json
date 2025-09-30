@@ -20,11 +20,8 @@
 	},
 	"dependencies": {
 		"@auth/sveltekit": "^1.10.0",
-		"@aws-sdk/client-s3": "^3.899.0",
-		"@smithy/node-http-handler": "^4.3.0",
 		"@sveltejs/kit": "^2.43.5",
 		"@tailwindcss/typography": "^0.5.19",
-		"@xmldom/xmldom": "^0.8.11",
 		"daisyui": "^5.1.25",
 		"svelte": "^5.39.6",
 		"tailwindcss": "^4.1.13"
@@ -40,6 +37,7 @@
 		"@sveltejs/adapter-cloudflare": "^7.2.3",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/vite": "^4.1.13",
+		"@types/node": "^24.6.0",
 		"eslint": "^9.36.0",
 		"eslint-plugin-svelte": "^3.12.4",
 		"globals": "^16.4.0",
