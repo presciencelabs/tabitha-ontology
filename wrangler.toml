@@ -22,4 +22,3 @@ database_id = "b3f48161-a488-4737-ab9a-f59c22090c80"
 [[r2_buckets]]
 binding = "R2_db_backups"
 bucket_name = "db-backups"
-remote = true
