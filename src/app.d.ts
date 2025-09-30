@@ -21,6 +21,8 @@ declare global {
 				AUTH_SECRET: string
 				GOOGLE_OAUTH_CLIENT_ID: string
 				GOOGLE_OAUTH_CLIENT_SECRET: string
+
+				R2_db_backups: R2Bucket // see wrangler.toml to match this name
 			}
 		}
 	}
