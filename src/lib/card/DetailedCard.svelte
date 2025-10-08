@@ -36,9 +36,11 @@
 					<Meaning {concept} />
 				</section>
 
-				<section class="prose mt-4 max-w-none">
-					<Category {concept} />
-				</section>
+				{#if concept.part_of_speech === 'Verb'}
+					<section class="prose mt-4 max-w-none">
+						<Category {concept} />
+					</section>
+				{/if}
 
 				{#if concept.status === 'present'}
 					<section class="prose mt-4 max-w-none">
