@@ -26,7 +26,7 @@
 			<Header {concept} />
 		</section>
 
-		<section class="prose flex-grow">
+		<section class="prose max-w-none">
 			<Meaning {concept} />
 		</section>
 
