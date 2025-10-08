@@ -32,11 +32,7 @@
 		{#each concepts as concept (`${concept.stem}-${concept.sense}-${concept.part_of_speech}`)}
 			<tr class="hover hover:cursor-pointer" on:click={() => open(concept)}>
 				<td>
-					{#if concept.status === 'absent'}
-						<span class="text-error">{concept.stem}</span>
-					{:else}
-						{concept.stem}
-					{/if}
+					{concept.stem}
 				</td>
 				<td>
 					{concept.sense}
