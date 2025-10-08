@@ -1,8 +1,7 @@
 <script>
 	import Icon from '@iconify/svelte'
-	import { Details, Examples } from '$lib'
+	import { Details, Examples, Meaning } from '$lib'
 	import Header from './Header.svelte'
-	import Meaning from './Meaning.svelte'
 	import SimplificationHints from './SimplificationHints.svelte'
 	import { Category } from './categorization'
 	import { onMount } from 'svelte'

@@ -1,5 +1,5 @@
 <script>
-	import { DetailedCard, Level, Occurrences } from '$lib'
+	import { DetailedCard, Level, Occurrences, Meaning } from '$lib'
 
 	/** @type {Concept[]} */
 	export let concepts
@@ -32,7 +32,11 @@
 		{#each concepts as concept (`${concept.stem}-${concept.sense}-${concept.part_of_speech}`)}
 			<tr class="hover hover:cursor-pointer" on:click={() => open(concept)}>
 				<td>
-					{concept.stem}
+					{#if concept.status === 'absent'}
+						<span class="text-error">{concept.stem}</span>
+					{:else}
+						{concept.stem}
+					{/if}
 				</td>
 				<td>
 					{concept.sense}
@@ -41,7 +45,7 @@
 					{concept.part_of_speech}
 				</td>
 				<td>
-					{concept.gloss}
+					<Meaning {concept} />
 				</td>
 				<td>
 					<Level {concept} />

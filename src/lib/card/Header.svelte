@@ -6,7 +6,11 @@
 </script>
 
 <h2 class="relative whitespace-nowrap pb-6">
-	{concept.stem}
+	{#if concept.status === 'absent'}
+		<span class="text-error">{concept.stem}</span>
+	{:else}
+		{concept.stem}
+	{/if}
 	<sup class="-top-4 font-mono text-sm text-neutral-500">{concept.sense}</sup>
 	<sub class="-bottom-4 -left-4 font-light italic text-neutral-500">{concept.part_of_speech}</sub>
 </h2>
