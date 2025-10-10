@@ -6,6 +6,7 @@ type Backup = {
 	size_mb: number,
 	created_at: Date,
 	url: string,
+	version: string,
 }
 
 export const load: PageServerLoad = async ({platform}) => {
@@ -27,7 +28,8 @@ export const load: PageServerLoad = async ({platform}) => {
 			name: obj.key,
 			size_mb: bytes_to_mb(obj.size),
 			created_at: new Date(obj.uploaded),
-			url: `https://db-backups.tabitha.bible/${obj.Key}`
+			url: `https://db-backups.tabitha.bible/${obj.key}`,
+			version: obj.key.split('.')[1],
 		}
 	}
 
