@@ -30,7 +30,7 @@
 </main>
 
 <!-- https://daisyui.com/components/footer -->
-<footer class="prose footer footer-horizontal mt-20 max-w-none bg-neutral p-10 text-neutral-content">
+<footer class="footer footer-horizontal mt-20 max-w-none bg-neutral p-10 text-neutral-content">
 	<nav>
 		<Selector colors="bg-accent text-accent-content" />
 	</nav>
@@ -53,5 +53,8 @@
 				Sign in to see additional features
 			</button>
 		{/if}
+
+		<div class="divider w-full"></div>
+		<a href="/downloads" class="link link-hover">Ontology downloads</a>
 	</nav>
 </footer>
