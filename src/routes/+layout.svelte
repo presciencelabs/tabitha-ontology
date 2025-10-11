@@ -54,7 +54,7 @@
 			</button>
 		{/if}
 
-		<div class="divider w-full"></div>
+		<div class="divider w-full divider-accent"></div>
 		<a href="/downloads" class="link link-hover">Ontology downloads</a>
 	</nav>
 </footer>
