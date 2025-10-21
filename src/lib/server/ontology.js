@@ -134,9 +134,10 @@ export const get_examples = db => async (concept, part_of_speech, source) => {
 	 * @type {import('@cloudflare/workers-types').D1Result<DbRowExample>}
 	 */
 	const { results } = await db.prepare(`
-		SELECT *
-		FROM Exhaustive_Examples
-		WHERE concept_stem = ? AND concept_sense = ? AND concept_part_of_speech = ? AND ref_type LIKE ?
+		SELECT E.ref_type, RPL.name AS ref_id_primary, E.ref_id_secondary, E.ref_id_tertiary, E.context_json
+		FROM Exhaustive_Examples as E
+		WHERE E.concept_stem = ? AND E.concept_sense = ? AND E.concept_part_of_speech = ? AND E.ref_type LIKE ?
+		INNER JOIN Reference_Primary_Lookup as RPL ON E.ref_id_primary = RPL.id
 	`).bind(stem, sense, part_of_speech, source.length ? source : '%').all()
 
 
