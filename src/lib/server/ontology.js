@@ -134,21 +134,21 @@ export const get_examples = db => async (concept, part_of_speech, source) => {
 	 * @type {import('@cloudflare/workers-types').D1Result<DbRowExample>}
 	 */
 	const { results } = await db.prepare(`
-		SELECT E.ref_type, RPL.name AS ref_id_primary_name, E.ref_id_secondary, E.ref_id_tertiary, E.context_json
-		FROM Exhaustive_Examples as E
+		SELECT E.ref_type, RPL.name AS ref_id_primary, E.ref_id_secondary, E.ref_id_tertiary, E.context_json
+		FROM Exhaustive_Examples AS E
+		INNER JOIN Reference_Primary_Lookup AS RPL ON E.ref_id_primary = RPL.id
 		WHERE E.concept_stem = ? AND E.concept_sense = ? AND E.concept_part_of_speech = ? AND E.ref_type LIKE ?
-		INNER JOIN Reference_Primary_Lookup as RPL ON E.ref_id_primary = RPL.id
 	`).bind(stem, sense, part_of_speech, source.length ? source : '%').all()
 
 
 	return results.map(normalize_results)
 
 	/** @param {DbRowExample} arg */
-	function normalize_results({ ref_type, ref_id_primary_name, ref_id_secondary, ref_id_tertiary, context_json }) {
+	function normalize_results({ ref_type, ref_id_primary, ref_id_secondary, ref_id_tertiary, context_json }) {
 		return {
 			reference: {
 				type: ref_type,
-				id_primary: ref_id_primary_name,
+				id_primary: ref_id_primary,
 				id_secondary: ref_id_secondary,
 				id_tertiary: ref_id_tertiary,
 			},

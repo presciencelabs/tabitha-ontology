@@ -46,7 +46,7 @@ type CuratedExample = {
 
 type DbRowExample = {
 	ref_type: string
-	ref_id_primary_name: string
+	ref_id_primary: string
 	ref_id_secondary: string
 	ref_id_tertiary: string
 	context_json: string
