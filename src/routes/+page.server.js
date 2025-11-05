@@ -14,7 +14,7 @@ export async function load({ url: { searchParams }, locals: { db_ontology } }) {
 	}
 
 	if (search_filter.scope === 'english') {
-		const return_to = { 'app': 'ontology', 'q': search_filter.q }
+		const return_to = { app: 'ontology', q: search_filter.q }
 		const return_to_url = encodeURIComponent(JSON.stringify(return_to))
 		throw redirect(303, `${PUBLIC_TARGETS_API_HOST}/English/search?q=${search_filter.q}&return_to=${return_to_url}`)
 	}
