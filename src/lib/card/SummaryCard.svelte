@@ -30,9 +30,10 @@
 			<Meaning {concept} />
 		</section>
 
-		{#if concept.part_of_speech === 'Verb'}
+		{#if concept.part_of_speech === 'Verb' && ['in ontology', 'approved'].includes(concept.status)}
+			{@const { part_of_speech, categories } = concept}
 			<section class="prose mt-4 max-w-none">
-				<Category {concept} />
+				<Category {part_of_speech} {categories} />
 			</section>
 		{/if}
 		

@@ -6,14 +6,13 @@ type ConceptKey = {
 
 type DbRowConcept = ConceptKey & {
 	id: string
-	level: string
+	level: number
 	categorization: string
 	examples: string
 	curated_examples: string
 	gloss: string
 	brief_gloss: string
-	occurrences: string
-	note: string
+	occurrences: number
 }
 
 type SimplificationHint = ConceptKey & {
@@ -25,6 +24,7 @@ type SimplificationHint = ConceptKey & {
 }
 
 interface Concept extends DbRowConcept {
+	level: string
 	categories: string[]
 	curated_examples: CuratedExample[]
 	curated_examples_raw: string

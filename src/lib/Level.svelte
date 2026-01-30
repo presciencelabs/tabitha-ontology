@@ -1,8 +1,6 @@
 <script>
-	/** @type {Concept} */
-	export let concept
-
-	$: level = concept.level
+	/** @type {string} */
+	export let level
 
 	/** @type {Record<string, [string, string]>}*/
 	const level_info = {

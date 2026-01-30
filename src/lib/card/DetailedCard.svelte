@@ -36,9 +36,12 @@
 					<Meaning {concept} />
 				</section>
 
-				<section class="prose mt-4 max-w-none">
-					<Category {concept} />
-				</section>
+				{#if ['in ontology', 'approved'].includes(concept.status)}
+					{@const { part_of_speech, categories } = concept}
+					<section class="prose mt-4 max-w-none">
+						<Category {part_of_speech} {categories} />
+					</section>
+				{/if}
 
 				{#if concept.status === 'in ontology'}
 					<section class="prose mt-4 max-w-none">

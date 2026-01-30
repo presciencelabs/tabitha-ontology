@@ -8,7 +8,7 @@
 <ConceptKey {concept} />
 
 <aside class="flex flex-col items-center gap-1 self-start">
-	<Level {concept} />
+	<Level level={concept.level} />
 
 	<Occurrences {concept} />
 </aside>

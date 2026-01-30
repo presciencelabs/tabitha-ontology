@@ -31,13 +31,12 @@ export const actions = {
 
 		const form_data = await request.formData()
 		const data: ConceptUpdateData = {
-			concept: concept_key,
+			...concept_key,
 			level: form_data.get('level') as string,
 			gloss: form_data.get('gloss') as string,
 			brief_gloss: form_data.get('brief_gloss') as string,
 			categorization: form_data.get('categorization') as string,
 			curated_examples: form_data.get('curated_examples') as string,
-			note: form_data.get('note') as string,
 		}
 
 		console.log(data)

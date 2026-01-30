@@ -1,4 +1,4 @@
-import { transform } from './transformers'
+import { transform_categorization, transform_curated_examples } from '$lib/transformers'
 
 // refs:
 // 	https://www.sqlite.org/lang_expr.html#the_like_glob_regexp_match_and_extract_operators
@@ -60,20 +60,20 @@ export const get_concepts = db => async concept_filter => {
 }
 
 /**
- * @param {import('@cloudflare/workers-types').D1Database} db
- * @param {ConceptKey} key
- * @returns {Promise<Concept|null>}
+ * @param {DbRowConcept} match_from_db
+ *
+ * @returns {Concept}
  */
-export async function get_concept(db, { stem, sense, part_of_speech }) {
-	const sql = `
-		SELECT *
-		FROM Concepts
-		WHERE stem = ? AND sense = ? AND part_of_speech = ?
-	`
-
-	/** @type {DbRowConcept|null} https://developers.cloudflare.com/d1/platform/client-api/#await-stmtfirstcolumn */
-	const result = await db.prepare(sql).bind(stem, sense, part_of_speech).first()
-	return result ? transform(result) : null
+function transform(match_from_db) {
+	return {
+		...match_from_db,
+		level: match_from_db.level.toString(),
+		categories: transform_categorization(match_from_db.part_of_speech, match_from_db.categorization),
+		curated_examples: transform_curated_examples(match_from_db.curated_examples),
+		curated_examples_raw: match_from_db.curated_examples,
+		status: 'in ontology',
+		how_to_hints: [],
+	}
 }
 
 /**
@@ -229,7 +229,6 @@ function merge_how_to_results(concepts, how_to_results) {
 			examples: '',
 			gloss,
 			brief_gloss: '',
-			note: '',
 			occurrences: 0,
 			categories: [],
 			curated_examples: [],

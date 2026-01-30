@@ -1,13 +1,16 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte'
 	import type { PageProps } from './$types'
-	import { ConceptKey } from '$lib'
+	import { ConceptKey, Level } from '$lib'
+	import { transform_categorization } from '$lib/transformers'
+	import { Category } from '$lib/card/categorization'
 
 	let { data, form }: PageProps = $props()
 
 	let concept_data = $state(data.concept_data)
 	let initial_data = $state($state.snapshot(concept_data))
 	let is_dirty = $derived(!deep_equal(concept_data, initial_data))
+	let categories = $derived(transform_categorization(concept_data.part_of_speech, concept_data.categorization))
 
 	const levels = ['0','1','2','3','4']
 
@@ -16,7 +19,7 @@
 	}
 
 	function concept_key(): string {
-		const { stem, sense, part_of_speech } = concept_data.concept
+		const { stem, sense, part_of_speech } = concept_data
 		return `${stem}-${sense}-${part_of_speech}`
 	}
 </script>
@@ -33,49 +36,54 @@
 {/if}
 
 <div class="prose">
-	<ConceptKey concept={concept_data.concept} />
+	<ConceptKey concept={concept_data} />
 </div>
 
 <form method="POST" action="?/update&concept={encodeURIComponent(concept_key())}">
-	<section class="py-4">
-		<label>
-			Level
-			<select name="level" bind:value={concept_data.level} class="select">
-				{#each levels as level}
-					<option value={level}>{level}</option>
-				{/each}
-			</select>
-		</label>
-		<br />
-		<label>
-			Gloss
-			<input name="gloss" bind:value={concept_data.gloss} class="input" />
-		</label>
+	<section class="py-4 flex flex-col gap-4">
+		<div>
+			<label class="pe-3">
+				Level
+				<select name="level" bind:value={concept_data.level} class="select w-20">
+					{#each levels as level}
+						<option value={level}>{level}</option>
+					{/each}
+				</select>
+			</label>
+			<Level level={concept_data.level} />
+		</div>
+		<div>
+			<label>
+				Gloss
+				<textarea name="gloss" bind:value={concept_data.gloss} class="textarea field-sizing-content w-1/2"></textarea>
+			</label>
+		</div>
 	</section>
 
-	<section class="py-4">
-		<h2>Advanced Information</h2>
-		<label>
-			Brief gloss
-			<input name="brief_gloss" bind:value={concept_data.brief_gloss} class="input" />
-		</label>
-		<br />
-		<label>
-			Categorization
-			<input name="categorization" bind:value={concept_data.categorization} class="input" />
-		</label>
-		<br />
-		<label>
-			Curated examples
-			<textarea name="curated_examples" bind:value={concept_data.curated_examples} class="textarea field-sizing-content" rows="3"></textarea>
-		</label>
-		<br />
-		<label>
-			Note
-			<input name="note" bind:value={concept_data.note} class="input" />
-		</label>
+	<section class="py-4 flex flex-col gap-4">
+		<div>
+			<label>
+				Brief gloss
+				<input name="brief_gloss" bind:value={concept_data.brief_gloss} class="input" />
+			</label>
+		</div>
+		<div>
+			<label>
+				Categorization
+				<input name="categorization" bind:value={concept_data.categorization} class="input" />
+			</label>
+			<div class="mt-2 ms-4">
+				<Category part_of_speech={concept_data.part_of_speech} {categories} />
+			</div>
+		</div>
+		<div>
+			<label>
+				Curated examples
+				<textarea name="curated_examples" bind:value={concept_data.curated_examples} class="textarea field-sizing-content w-full" rows="3"></textarea>
+			</label>
+		</div>
 	</section>
 
 	<button class="btn btn-primary" type="submit" disabled={!is_dirty}>Save</button>
-	<a href="/?q={concept_data.concept.stem}" class="btn">Cancel</a>
+	<a href="/?q={concept_data.stem}" class="btn">Cancel</a>
 </form>
