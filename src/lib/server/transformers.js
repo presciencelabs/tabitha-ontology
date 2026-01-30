@@ -8,8 +8,10 @@ import { semantic_category, sources, theta_grid, usage_info } from '$lib/lookups
 export function transform(match_from_db) {
 	return {
 		...match_from_db,
+		level: transform_level(match_from_db.level),
 		categories: transform_categorization(match_from_db),
 		curated_examples: transform_curated_examples(match_from_db.curated_examples),
+		curated_examples_raw: match_from_db.curated_examples,
 		occurrences: transform_occurrences(match_from_db.occurrences),
 		status: 'in ontology',
 		how_to_hints: [],
@@ -76,6 +78,15 @@ function transform_curated_examples(curated_examples_from_db) {
 			}
 		}
 	}
+}
+
+/**
+ * @param {number} level_from_db
+ *
+ * @returns {string}
+ */
+function transform_level(level_from_db) {
+	return level_from_db.toString()
 }
 
 /**

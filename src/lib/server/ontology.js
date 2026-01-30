@@ -61,6 +61,23 @@ export const get_concepts = db => async concept_filter => {
 
 /**
  * @param {import('@cloudflare/workers-types').D1Database} db
+ * @param {ConceptKey} key
+ * @returns {Promise<Concept|null>}
+ */
+export async function get_concept(db, { stem, sense, part_of_speech }) {
+	const sql = `
+		SELECT *
+		FROM Concepts
+		WHERE stem = ? AND sense = ? AND part_of_speech = ?
+	`
+
+	/** @type {DbRowConcept|null} https://developers.cloudflare.com/d1/platform/client-api/#await-stmtfirstcolumn */
+	const result = await db.prepare(sql).bind(stem, sense, part_of_speech).first()
+	return result ? transform(result) : null
+}
+
+/**
+ * @param {import('@cloudflare/workers-types').D1Database} db
  * @returns {Promise<string>}
  */
 export async function get_version(db) {
@@ -212,9 +229,11 @@ function merge_how_to_results(concepts, how_to_results) {
 			examples: '',
 			gloss,
 			brief_gloss: '',
+			note: '',
 			occurrences: 0,
 			categories: [],
 			curated_examples: [],
+			curated_examples_raw: '',
 			status: hint.ontology_status,
 			how_to_hints: [hint],
 		}
