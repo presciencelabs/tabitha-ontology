@@ -4,6 +4,7 @@
 	import SimplificationHints from './SimplificationHints.svelte'
 	import { Category } from './categorization'
 	import { DetailedCard, Meaning } from '$lib'
+	import { page } from '$app/state'
 
 	/** @type {Concept} */
 	export let concept
@@ -45,6 +46,11 @@
 		{/if}
 
 		<section class="card-actions mt-4 justify-end">
+			{#if concept.status === 'in ontology' && page.data.can_update}
+				<a class="btn btn-sm" title="Edit" href="protected/concept/update?concept={concept.stem}-{concept.sense}-{concept.part_of_speech}">
+					<Icon icon="mdi:edit-outline" class="h-5 w-5" />
+				</a>
+			{/if}
 			<button on:click={expand} class="btn btn-primary btn-sm">
 				EXPAND <Icon icon="gg:maximize-alt" class="h-4 w-4" />
 			</button>
