@@ -9,7 +9,7 @@ declare global {
 		interface Locals {
 			db_ontology: D1Database
 			db_auth: D1Database
-			auth: import("@auth/sveltekit").Auth
+			auth: import('@auth/sveltekit').Auth
 			user: User | undefined
 		}
 		// interface PageData {}

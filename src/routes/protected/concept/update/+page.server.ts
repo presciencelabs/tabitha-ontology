@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url: { searchParams }, locals }) {
-	if (!(await is_authorized(locals, 'UPDATE_CONCEPT'))) {
+	if (!await is_authorized(locals, 'UPDATE_CONCEPT')) {
 		throw error(403, 'You must have permission to update a concept in the Ontology.')
 	}
 
@@ -12,7 +12,7 @@ export async function load({ url: { searchParams }, locals }) {
 
 	const concept_data = await get_concept_for_update(locals.db_ontology, concept_key)
 	if (!concept_data) {
-		throw error(400, "Specified concept does not exist.")
+		throw error(400, 'Specified concept does not exist.')
 	}
 
 	return {
@@ -23,7 +23,7 @@ export async function load({ url: { searchParams }, locals }) {
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
 	update: async ({ request, locals, url: { searchParams } }) => {
-		if (!(await is_authorized(locals, 'UPDATE_CONCEPT'))) {
+		if (!await is_authorized(locals, 'UPDATE_CONCEPT')) {
 			throw error(403, 'You must have permission to update a concept in the Ontology.')
 		}
 
@@ -39,7 +39,6 @@ export const actions = {
 			curated_examples: form_data.get('curated_examples') as string,
 		}
 
-		console.log(data)
 		await update_concept(locals.db_ontology, data)
 
 		return { success: true }
@@ -63,6 +62,6 @@ function parse_concept_key(key: string): ConceptKey|null {
 	if (!concept_match) {
 		return null
 	}
-	const [_, stem, sense, part_of_speech] = concept_match
+	const [, stem, sense, part_of_speech] = concept_match
 	return { stem, sense, part_of_speech }
 }

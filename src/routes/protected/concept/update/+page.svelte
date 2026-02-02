@@ -14,7 +14,7 @@
 
 	const levels = ['0','1','2','3','4']
 
-	function deep_equal(obj1: any, obj2: any): boolean {
+	function deep_equal(obj1: ConceptUpdateData, obj2: ConceptUpdateData): boolean {
 		return JSON.stringify(obj1) === JSON.stringify(obj2)
 	}
 
