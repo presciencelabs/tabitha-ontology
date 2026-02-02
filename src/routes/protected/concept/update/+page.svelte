@@ -50,7 +50,7 @@
 					{/each}
 				</select>
 			</label>
-			<Level level={concept_data.level} />
+			<Level level={concept_data.level} tooltip_dir={'tooltip-right'} />
 		</div>
 		<div>
 			<label>

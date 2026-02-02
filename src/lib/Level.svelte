@@ -2,6 +2,9 @@
 	/** @type {string} */
 	export let level
 
+	/** @type {string}*/
+	export let tooltip_dir = 'tooltip-left'
+
 	/** @type {Record<string, [string, string]>}*/
 	const level_info = {
 		'0': ['Semantic Primitive', 'L0'],
@@ -17,7 +20,7 @@
 	$: level_display = Number(level) >= 0 ? `L${level}` : level
 </script>
 
-<span class={`badge ${level_class} badge-lg tooltip tooltip-left font-mono`} data-tip={description}>
+<span class={`badge ${level_class} badge-lg tooltip ${tooltip_dir} font-mono`} data-tip={description}>
 	{level_display}
 </span>
 
