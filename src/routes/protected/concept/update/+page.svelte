@@ -4,6 +4,7 @@
 	import { ConceptKey, Level } from '$lib'
 	import { transform_categorization } from '$lib/transformers'
 	import { Category } from '$lib/card/categorization'
+	import { levels } from '$lib/lookups'
 
 	let { data, form }: PageProps = $props()
 
@@ -11,8 +12,6 @@
 	let initial_data = $state($state.snapshot(concept_data))
 	let is_dirty = $derived(!deep_equal(concept_data, initial_data))
 	let categories = $derived(transform_categorization(concept_data.part_of_speech, concept_data.categorization))
-
-	const levels = ['0','1','2','3','4']
 
 	function deep_equal(obj1: ConceptUpdateData, obj2: ConceptUpdateData): boolean {
 		return JSON.stringify(obj1) === JSON.stringify(obj2)
@@ -45,7 +44,7 @@
 			<label class="pe-3">
 				Level
 				<select name="level" bind:value={concept_data.level} class="select w-20">
-					{#each levels as level}
+					{#each levels.keys() as level}
 						<option value={level}>{level}</option>
 					{/each}
 				</select>

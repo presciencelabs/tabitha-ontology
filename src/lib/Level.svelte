@@ -1,4 +1,6 @@
 <script>
+	import { levels } from './lookups'
+
 	/** @type {string} */
 	export let level
 
@@ -6,17 +8,13 @@
 	export let tooltip_dir = 'tooltip-left'
 
 	/** @type {Record<string, [string, string]>}*/
-	const level_info = {
-		'0': ['Semantic Primitive', 'L0'],
-		'1': ['Semantic Molecule', 'L1'],
-		'2': ['Complex - usually explicated', 'L2'],
-		'3': ['Complex - usually in a complex alternate', 'L3'],
-		'4': ['Inexplicable', 'L4'],
+	const other_level_info = {
 		'N/A': ['Not in the ontology', 'badge-error'],
 		'FW': ['Function Word', 'badge-netural'],
 	}
-
-	$: [description, level_class] = level_info[level] || ['', 'badge-neutral']
+	$: [description, level_class] = levels.has(level)
+		? [levels.get(level) || '', `L${level}`]
+		: other_level_info[level] || ['', 'badge-netural']
 	$: level_display = Number(level) >= 0 ? `L${level}` : level
 </script>
 
