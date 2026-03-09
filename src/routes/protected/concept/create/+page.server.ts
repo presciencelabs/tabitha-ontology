@@ -1,6 +1,6 @@
 import { is_authorized } from '$lib/server/auth'
 import { create_concept, get_concept_for_update } from '$lib/server/changes/concepts'
-import { error } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals }) {
@@ -25,7 +25,7 @@ export async function load({ locals }) {
 
 /** @satisfies {import('./$types').Actions} */
 export const actions = {
-	update: async ({ request, locals }) => {
+	create: async ({ request, locals }) => {
 		if (!await is_authorized(locals, 'ADD_CONCEPT')) {
 			throw error(403, 'You must have permission to update a concept in the Ontology.')
 		}
@@ -46,10 +46,9 @@ export const actions = {
 		if (existing) {
 			throw error(400, 'A concept with this stem, sense, and part of speech already exists.')
 		}
-		// TODO check if the provided sense is the next possible one, not an arbitrary one
 
 		await create_concept(locals.db_ontology, data)
 
-		return { success: true }
+		redirect(303, `/?q=${encodeURIComponent(data.stem)}`)
 	},
 }

@@ -11,44 +11,66 @@
 	let concept_data = $state(data.concept_data)
 	let can_save = $derived(concept_data.stem && concept_data.sense && concept_data.part_of_speech)
 	let categories = $derived(transform_categorization(concept_data.part_of_speech, concept_data.categorization))
-</script>
 
-{#if form?.success}
-	<!-- this message is ephemeral; it exists because the page was rendered in
-	       response to a form submission. it will vanish if the user reloads -->
-	<div class="pb-6">
-		<div role="alert" class="alert alert-success">
-			<Icon icon="mdi:check-circle-outline" class="h-6 w-6" />
-			<span class="font-semibold">Successfully updated!</span>
-		</div>
-	</div>
-{/if}
+	let debounced_stem_pos = $state({ stem: concept_data.stem, part_of_speech: concept_data.part_of_speech })
+	let debouce_delay = 500
+	let fetching_sense = $state(false)
+
+	$effect(() => {
+		// the timer prevents a fetch request from being sent on every keystroke
+		debounced_stem_pos = { stem: concept_data.stem, part_of_speech: concept_data.part_of_speech }
+		fetching_sense = true
+		const timer = setTimeout(() => {
+			const { stem, part_of_speech } = debounced_stem_pos
+			if (stem && part_of_speech) {
+				fetch(`/protected/concept/create/next-sense?stem=${stem}&part_of_speech=${part_of_speech}`).then(response => {
+					response.json().then(data => {
+						concept_data.sense = data.next_sense
+					}).finally(() => {
+						fetching_sense = false
+					})
+				}).finally(() => {
+					fetching_sense = false
+				})
+			} else {
+				fetching_sense = false
+			}
+		}, debouce_delay)
+
+		return () => clearTimeout(timer)
+	})
+</script>
 
 <form method="POST" action="?/create">
 	<section class="py-4 flex flex-col gap-4">
 		<div>
 			<label>
 				Stem
-				<input bind:value={concept_data.stem} class="input" required pattern="[A-Za-z0-9.\-]+" title="Must only contains letters, numbers, hyphens, or periods" />
-			</label>
-		</div>
-		
-		<div>
-			<label>
-				Sense
-				<input bind:value={concept_data.sense} class="input w-20" required maxlength="1" pattern="[A-Z]?" title="Must be a single capital letter" />
+				<input name="stem" bind:value={concept_data.stem} class="input" required pattern="[A-Za-z0-9.\-]+" title="Must only contains letters, numbers, hyphens, or periods" />
 			</label>
 		</div>
 
 		<div>
 			<label>
 				Part of speech
-				<select bind:value={concept_data.part_of_speech} class="select" required>
+				<select name="part_of_speech" bind:value={concept_data.part_of_speech} class="select" required>
 					{#each parts_of_speech as pos}
 						<option value={pos}>{pos}</option>
 					{/each}
 				</select>
 			</label>
+		</div>
+
+		<div class="flex items-center">
+			<label>
+				Sense
+				<input name="sense" bind:value={concept_data.sense} class="input w-15" readonly />
+			</label>
+			{#if fetching_sense}
+				<div class="">
+					<Icon icon="line-md:loading-twotone-loop" class="h-5 w-5 text-warning" />
+				</div>
+			{/if}
 		</div>
 	</section>
 
