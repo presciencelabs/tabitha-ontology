@@ -46,8 +46,7 @@ export async function get_next_sense(db: D1Database, stem: string, part_of_speec
 export async function create_concept(db: D1Database, data: ConceptCreateData) {
 	// The new concept needs its id set according to its position in the list of concepts sorted by TBTA's custom sorting sequence.
 	// All other concepts below it in the order need to have their id incremented to make room for the new concept.
-	const pos_concepts = await get_concepts(db)({ q: '*', category: data.part_of_speech, scope: 'stems' })
-	const new_id = find_concept_position(pos_concepts, data.stem) + 1	// +1 because ids are 1-based
+	const new_id = await find_concept_position(db, data) + 1	// +1 because ids are 1-based
 
 	const update_sql = `
 		UPDATE CONCEPTS SET id = id + 1
@@ -66,12 +65,14 @@ export async function create_concept(db: D1Database, data: ConceptCreateData) {
 		.run()
 }
 
-function find_concept_position(concepts: Concept[], new_stem: string): number {
+async function find_concept_position(db: D1Database, data: ConceptKey): Promise<number> {
 	// TBTA's custom sorting sequence. Characters not in this sequence are ignored in sorting. It is case-insensitive
 	const sorting_sequence = '-0123456789abcdefghijklmnopqrstuvwxyz'
 	const rank = new Map(sorting_sequence.split('').map((char, index) => [char, index]))
 
-	const new_stem_lower = new_stem.toLowerCase()
+	const concepts = await get_concepts(db)({ q: '*', category: data.part_of_speech, scope: 'stems' })
+
+	const new_stem_lower = data.stem.toLowerCase()
 	const position = concepts.findIndex(({ stem }) => compare_stems(stem.toLowerCase(), new_stem_lower) > 0)
 	return position >= 0 ? position : concepts.length
 

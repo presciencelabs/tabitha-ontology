@@ -27,7 +27,7 @@ export async function load({ locals }) {
 export const actions = {
 	create: async ({ request, locals }) => {
 		if (!await is_authorized(locals, 'ADD_CONCEPT')) {
-			throw error(403, 'You must have permission to update a concept in the Ontology.')
+			throw error(403, 'You must have permission to add a concept to the Ontology.')
 		}
 
 		const form_data = await request.formData()

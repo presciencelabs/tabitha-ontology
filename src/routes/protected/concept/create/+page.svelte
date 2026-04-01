@@ -6,7 +6,7 @@
 	import { Category } from '$lib/card/categorization'
 	import { levels, parts_of_speech } from '$lib/lookups'
 
-	let { data, form }: PageProps = $props()
+	let { data }: PageProps = $props()
 
 	let concept_data = $state(data.concept_data)
 	let can_save = $derived(concept_data.stem && concept_data.sense && concept_data.part_of_speech)
@@ -46,7 +46,7 @@
 		<div>
 			<label>
 				Stem
-				<input name="stem" bind:value={concept_data.stem} class="input" required pattern="[A-Za-z0-9.\-]+" title="Must only contains letters, numbers, hyphens, or periods" />
+				<input name="stem" bind:value={concept_data.stem} class="input" required />
 			</label>
 		</div>
 
