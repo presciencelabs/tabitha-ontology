@@ -37,7 +37,7 @@ async function fetch_statuses_by_book(examples) {
 	// Without the caching, the whole process can take ~10 seconds.
 
 	/** @type {[string, SourceStatus][]} */
-	const book_statuses = await Promise.all(book_refs.map(async (book) => {
+	const book_statuses = await Promise.all(book_refs.map(async book => {
 		const response = await fetch(`${PUBLIC_SOURCES_API_HOST}/lookup/status/Bible/${book}`)
 		if (!response.ok) {
 			// just ignore the status if the API call fails

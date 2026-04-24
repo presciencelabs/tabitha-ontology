@@ -20,7 +20,7 @@
 		{#if book_status !== 'Ready to Translate'}
 			<div class="dropdown dropdown-hover">
 				<div role="button" class="-mb-1 text-warning">
-					<Icon icon="mdi:alert-outline" class="h-6 w-6" />
+					<Icon icon="mdi:alert-outline" class="h-5 w-5" />
 				</div>
 				<div class="dropdown-content bg-warning text-warning-content text-sm rounded-box z-1 p-2 shadow-sm">
 					Source data for this book is still being reviewed, so this usage may not be accurate.
