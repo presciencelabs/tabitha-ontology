@@ -12,7 +12,7 @@ export async function find_related_concepts(db: D1Database, search_term: string)
 		// leave decimal numbers though, so things like 'tenth' can relate to '.1'
 		c => c.gloss.includes('number') && !!c.stem.match(/^\d/),
 		// don't bother including proper names, unless one of the geographical ones like mount-Horeb, city-David, etc. Unsure about this one
-		c => c.gloss.startsWith('(proper name)') && !c.stem.match(/^sea-|mount-|valley-|river-|desert-|city-|cave-|feast-|gate-/i),
+		c => c.gloss.startsWith('(proper name)') && !c.stem.match(/^(?:sea-|mount-|valley-|river-|desert-|city-|cave-|feast-|gate-)/i),
 		// don't include concepts that are going to be deleted
 		c => c.gloss.includes('DELETE'),
 		// don't include the concepts that are exactly the search term (handled separately and would be redundant)
