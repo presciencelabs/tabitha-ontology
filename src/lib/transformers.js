@@ -63,23 +63,8 @@ export function transform_curated_examples(curated_examples_raw) {
 				return {
 					category,
 					word: category === 'Word' ? encoded_entity : undefined,
-					feature: feature_value ? { code: feature_code, value: feature_value } : undefined
+					feature: feature_value ? { code: feature_code, value: feature_value } : undefined,
 				}
-			}
-
-			/**
-			 * @param {string} category 
-			 * @param {string} encoded
-			 */
-			function create_entity_display(category, encoded) {
-				if (category === 'Clause') {
-					// for 'Proposition' - verb clause arguments are called 'Patient/Agent Propositions'
-					return '[Prop'
-				}
-				if (['NP', 'VP', 'AdjP', 'AdvP'].includes(category)) {
-					return `(${category}`
-				}
-				return encoded
 			}
 		}
 	}
