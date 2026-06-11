@@ -4,7 +4,6 @@ import { SvelteKitAuth } from '@auth/sveltekit'
 import Google from '@auth/sveltekit/providers/google'
 import { error, type Handle, type RequestEvent } from '@sveltejs/kit'
 import { sequence } from '@sveltejs/kit/hooks'
-import type { D1Database } from '@cloudflare/workers-types'
 
 const cors_handle: Handle = async function cors_handle({ event, resolve }) {
 	const response = await resolve(event)
@@ -24,8 +23,8 @@ const db_config_handle: Handle = async function db_config_handle({ event, resolv
 		throw error(500, `database missing from platform arg: ${JSON.stringify(event.platform)}`)
 	}
 
-	event.locals.db_ontology = event.platform.env.DB_Ontology.withSession() as unknown as D1Database
-	event.locals.db_auth = event.platform.env.DB_Auth.withSession() as unknown as D1Database
+	event.locals.db_ontology = event.platform.env.DB_Ontology.withSession()
+	event.locals.db_auth = event.platform.env.DB_Auth.withSession()
 
 	return resolve(event)
 }
