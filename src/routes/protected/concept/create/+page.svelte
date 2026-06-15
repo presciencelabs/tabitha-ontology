@@ -41,13 +41,17 @@
 
 <article class="card bg-base-200 mx-auto w-[80%]">
 	<main class="card-body">
+		<div class="prose pb-4">
+			<h2>Add a new concept</h2>
+		</div>
+
 		{#if concept_data.sense}
 			{@const concept_for_header: Concept = { ...concept_data, categorization: '', curated_examples: [], curated_examples_raw: '', occurrences: 0, status: 'not used', how_to_hints: [], examples: '', id: '' }}
 			<section class="prose card-title max-w-none justify-between">
 				<Header concept={concept_for_header} />
 			</section>
 		{:else if fetching_sense}
-			<div class="">
+			<div>
 				<Icon icon="line-md:loading-twotone-loop" class="h-5 w-5 text-warning" />
 			</div>
 		{/if}

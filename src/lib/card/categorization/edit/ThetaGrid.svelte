@@ -15,11 +15,11 @@
 				<td>
 					{argument}
 				</td>
-				<td>
+				<td class="pl-4">
 					<select bind:value={categories[i]} name="categories[]" class="select w-35">
+						<option value="">---</option>
 						<option value={argument}>Required</option>
 						<option value="({argument})">Optional</option>
-						<option value="">---</option>
 					</select>
 				</td>
 			</tr>
