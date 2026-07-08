@@ -21,7 +21,7 @@ importers:
         specifier: ^0.5.20
         version: 0.5.20(tailwindcss@4.3.2)
       daisyui:
-        specifier: ^5.6.14
+        specifier: ^5.5.23
         version: 5.6.14
       svelte:
         specifier: ^5.56.4
