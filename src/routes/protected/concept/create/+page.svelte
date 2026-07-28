@@ -72,6 +72,8 @@
 					</select>
 				</label>
 
+				<input name="sense" type="hidden" bind:value={concept_data.sense} />
+
 				<label>
 					Level
 					<br />
