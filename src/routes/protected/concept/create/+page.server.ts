@@ -1,4 +1,5 @@
 import { is_authorized } from '$lib/server/auth'
+import { record_create_concept } from '$lib/server/changes/changes.js'
 import { create_concept, get_concept_for_update } from '$lib/server/changes/concepts'
 import { error, redirect } from '@sveltejs/kit'
 
@@ -47,6 +48,7 @@ export const actions = {
 			throw error(400, 'A concept with this stem, sense, and part of speech already exists.')
 		}
 
+		await record_create_concept(locals.db_ontology, data, locals.user!)
 		await create_concept(locals.db_ontology, data)
 
 		redirect(303, `/?q=${encodeURIComponent(data.stem)}`)
