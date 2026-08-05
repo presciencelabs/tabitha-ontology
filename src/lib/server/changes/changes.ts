@@ -26,14 +26,14 @@ export async function record_create_concept(db: D1Database, create_data: Concept
 		VALUES (?, ?, ?, ?, ?, ?, ?)
 	`
 
-	const { stem, sense, part_of_speech, level, gloss, brief_gloss, categories, curated_examples } = create_data
+	const { stem, sense, part_of_speech, level, gloss, brief_gloss, categories } = create_data
 	const change_data: OntologyChangeDataFields = {
 		level: { value: level },
 		gloss: { value: gloss },
-		brief_gloss: { value: brief_gloss },
-		categories: { value: categories },
-		curated_examples: { value: curated_examples },
+		...(brief_gloss ? { brief_gloss: { value: brief_gloss } } : {}),
+		categories: { value: categories.filter(cat => !!cat && !cat.startsWith('never')) },
 	}
+
 	await db.prepare(sql)
 		.bind(stem, sense, part_of_speech, JSON.stringify(change_data), 'create', user.email!, new Date().toISOString())
 		.run()
@@ -82,6 +82,7 @@ function transform(db_change: DbOntologyChange): OntologyChange {
 		concept_stem, concept_sense, concept_part_of_speech,
 		data, action,
 		approved_by_email, approved_date,
+		applied_date, version,
 	} = db_change
 
 	return {
@@ -93,9 +94,8 @@ function transform(db_change: DbOntologyChange): OntologyChange {
 		},
 		data: JSON.parse(data) as OntologyChangeDataFields,
 		action,
-		approved_by: {
-			email: approved_by_email,
-			date: new Date(approved_date!)
-		},
+		approved_by: approved_by_email && approved_date ? { email: approved_by_email, date: new Date(approved_date!) } : null,
+		applied_date: applied_date ? new Date(applied_date) : null,
+		version,
 	}
 }

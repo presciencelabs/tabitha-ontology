@@ -1,6 +1,6 @@
 import { is_authorized } from '$lib/server/auth'
 import { record_update_concept } from '$lib/server/changes/changes'
-import { get_concept_for_update, update_concept } from '$lib/server/changes/concepts.js'
+import { get_concept_for_update } from '$lib/server/changes/concepts.js'
 import { error } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
@@ -41,7 +41,6 @@ export const actions = {
 		}
 
 		await record_update_concept(locals.db_ontology, data, locals.user!)
-		await update_concept(locals.db_ontology, data)
 
 		return { success: true }
 	},

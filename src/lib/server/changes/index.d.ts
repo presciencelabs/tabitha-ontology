@@ -15,8 +15,12 @@ type DbOntologyChange = {
 	concept_part_of_speech: string
 	data: string
 	action: OntologyChangeAction
-	approved_by_email: UserEmail
-	approved_date: string
+	// suggested_by_email: UserEmail | null
+	// suggested_date: string | null
+	approved_by_email: UserEmail | null
+	approved_date: string | null
+	applied_date: string | null
+	version: string | null
 }
 
 type OntologyChange = {
@@ -24,7 +28,10 @@ type OntologyChange = {
 	concept: ConceptKey
 	data: OntologyChangeDataFields
 	action: OntologyChangeAction
-	approved_by: WorkflowInfo
+	// suggested_by: WorkflowInfo | null
+	approved_by: WorkflowInfo | null
+	applied_date: Date | null
+	version: string | null
 }
 
 type OntologyChangeAction = 'create' | 'update' // TODO | 'delete'

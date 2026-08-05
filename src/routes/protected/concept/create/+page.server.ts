@@ -1,6 +1,6 @@
 import { is_authorized } from '$lib/server/auth'
 import { record_create_concept } from '$lib/server/changes/changes.js'
-import { create_concept, get_concept_for_update } from '$lib/server/changes/concepts'
+import { get_concept_for_update } from '$lib/server/changes/concepts'
 import { error, redirect } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
@@ -49,7 +49,6 @@ export const actions = {
 		}
 
 		await record_create_concept(locals.db_ontology, data, locals.user!)
-		await create_concept(locals.db_ontology, data)
 
 		redirect(303, `/?q=${encodeURIComponent(data.stem)}`)
 	},
