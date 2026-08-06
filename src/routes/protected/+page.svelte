@@ -61,13 +61,13 @@
 			</div>
 
 			{#if status_message}
-				<div class="mt-4 text-sm p-3 rounded-md {status_type === 'success' ? 'bg-success/15 text-success-content' : status_type === 'error' ? 'bg-error/15 text-error-content' : 'bg-info/15 text-info-content'} flex items-center gap-2">
+				<div class="alert mt-4 text-sm {status_type === 'success' ? 'alert-success' : status_type === 'error' ? 'alert-error' : 'alert-info'}">
 					{#if status_type === 'success'}
-						<Icon icon="material-symbols:check-circle-outline" class="w-4 h-4 text-success" />
+						<Icon icon="material-symbols:check-circle-outline" class="w-5 h-5" />
 					{:else if status_type === 'error'}
-						<Icon icon="material-symbols:error-outline" class="w-4 h-4 text-error" />
+						<Icon icon="material-symbols:error-outline" class="w-5 h-5" />
 					{:else}
-						<Icon icon="material-symbols:info-outline" class="w-4 h-4 text-info" />
+						<Icon icon="material-symbols:info-outline" class="w-5 h-5" />
 					{/if}
 					<span>{status_message}</span>
 				</div>
