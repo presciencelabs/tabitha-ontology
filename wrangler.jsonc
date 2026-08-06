@@ -10,6 +10,10 @@
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	},
 	"vars": {
 		"GOOGLE_OAUTH_CLIENT_ID": "920310198944-ej5djo8kc2l31jlks9j9b5lu73i8qpce.apps.googleusercontent.com" // Ontology (preview)
 	},
