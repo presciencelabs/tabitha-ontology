@@ -39,7 +39,7 @@
 			<tbody>
 			{#each changes as change}
 				<tr>
-					<td>{change.action}</td>
+					<td>{change.action === 'create' ? 'Add' : 'Edit'}</td>
 					<td>{change.concept.stem}-{change.concept.sense} ({change.concept.part_of_speech})</td>
 					<td>
 						<ul class="list list-disc">
