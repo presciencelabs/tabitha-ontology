@@ -4,7 +4,30 @@ import { create_concept, get_concept_for_update, update_concept } from './concep
 import { get_version } from '$lib/server/ontology'
 import { default_categories } from '$lib/lookups'
 
+async function create_table_if_not_exists(db: D1Database) {
+	const sql = `
+		CREATE TABLE IF NOT EXISTS Changes (
+			'id'								INTEGER PRIMARY KEY,
+			'concept_stem'					TEXT,
+			'concept_sense'				TEXT,
+			'concept_part_of_speech'	TEXT,
+			'data'							TEXT,
+			'action'							TEXT,
+			'suggested_by_email'			TEXT,
+			'suggested_date'				TEXT,
+			'approved_by_email'			TEXT,
+			'approved_date'				TEXT,
+			'applied_date'					TEXT,
+			'version'						TEXT
+		)
+	`
+	// Ensure table exists
+	await db.prepare(sql).run()
+}
+
 export async function get_all_changes(db: D1Database): Promise<OntologyChange[]> {
+	create_table_if_not_exists(db)
+
 	const sql = `
 		SELECT *
 		FROM Changes
@@ -15,17 +38,21 @@ export async function get_all_changes(db: D1Database): Promise<OntologyChange[]>
 }
 
 export async function get_pending_changes(db: D1Database): Promise<OntologyChange[]> {
+	create_table_if_not_exists(db)
+
 	const sql = `
 		SELECT *
 		FROM Changes
 		WHERE applied_date IS NULL
-		ORDER BY approved_date DESC NULLS FIRST, suggested_date DESC
+		ORDER BY approved_date DESC NULLS FIRST
 	`
 	const { results } =  await db.prepare(sql).all<DbOntologyChange>()
 	return results.map(transform)
 }
 
 export async function record_create_concept(db: D1Database, create_data: ConceptCreateData, user: User) {
+	create_table_if_not_exists(db)
+
 	const sql = `
 		INSERT INTO Changes (
 			concept_stem,
@@ -52,15 +79,9 @@ export async function record_create_concept(db: D1Database, create_data: Concept
 		.run()
 }
 
-/**
- * Note this must be called before updating the db so that it can properly record the previous values.
- * 
- * @param db 
- * @param update_data 
- * @param user 
- * @returns 
- */
 export async function record_update_concept(db: D1Database, update_data: ConceptUpdateData, user: User) {
+	create_table_if_not_exists(db)
+
 	const sql = `
 		INSERT INTO Changes (
 			concept_stem,
@@ -114,6 +135,8 @@ function transform(db_change: DbOntologyChange): OntologyChange {
 }
 
 export async function apply_pending_changes(db: D1Database): Promise<{ count: number, failed: number, version: string }> {
+	create_table_if_not_exists(db)
+
 	const sql = `
 		SELECT *
 		FROM Changes
