@@ -7,12 +7,12 @@
 
 	function categories_display(value: string[], old: string[] | undefined) {
 		if (!old) {
-			return value.filter(v => !v.startsWith('never')).join(' | ')
+			return value.filter(v => !!v && !v.startsWith('never')).join(' | ')
 		}
 
 		const display_parts: string[] = []
 		for (let i = 0; i < value.length; i++) {
-			if (value[i].split(' ')[0] !== old[i].split(' ')[0]) {
+			if (value[i] !== old[i]) {
 				display_parts.push(`'${old[i]}' → '${value[i]}'`)
 			}
 		}

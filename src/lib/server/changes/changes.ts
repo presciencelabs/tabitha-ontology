@@ -1,6 +1,8 @@
 import type { User } from '@auth/sveltekit'
 import type { D1Database } from '@cloudflare/workers-types'
-import { get_concept_for_update } from './concepts'
+import { create_concept, get_concept_for_update, update_concept } from './concepts'
+import { get_version } from '$lib/server/ontology'
+import { default_categories } from '$lib/lookups'
 
 export async function get_all_changes(db: D1Database): Promise<OntologyChange[]> {
 	const sql = `
@@ -31,7 +33,7 @@ export async function record_create_concept(db: D1Database, create_data: Concept
 		level: { value: level },
 		gloss: { value: gloss },
 		...(brief_gloss ? { brief_gloss: { value: brief_gloss } } : {}),
-		categories: { value: categories.filter(cat => !!cat && !cat.startsWith('never')) },
+		categories: { value: categories },
 	}
 
 	await db.prepare(sql)
@@ -69,6 +71,16 @@ export async function record_update_concept(db: D1Database, update_data: Concept
 	const fields: (keyof OntologyChangeDataFields)[] = ['level', 'gloss', 'brief_gloss', 'categories', 'curated_examples']
 	const change_data: OntologyChangeDataFields = Object.fromEntries(fields.flatMap(field => {
 		return old[field].toString() !== update_data[field].toString() ? [[field, { old: old[field], value: update_data[field] }]] : []
+		// const old_value = old[field]
+		// const new_value = update_data[field]
+
+		// if (Array.isArray(new_value) && Array.isArray(old_value)) {
+		// 	const old_parts = old_value.filter((ov, i) => ov !== new_value[i])
+		// 	const new_parts = new_value.filter((nv, i) => nv !== old_value[i])
+		// 	return new_parts.length > 0 ? [[field, { old: old_parts, value: new_parts }]] : []
+		// }
+
+		// return old_value !== new_value ? [[field, { old: old_value, value: new_value }]] : []
 	}))
 
 	await db.prepare(sql)
@@ -98,4 +110,120 @@ function transform(db_change: DbOntologyChange): OntologyChange {
 		applied_date: applied_date ? new Date(applied_date) : null,
 		version,
 	}
+}
+
+export async function apply_pending_changes(db: D1Database): Promise<{ count: number, failed: number, version: string }> {
+	const sql = `
+		SELECT *
+		FROM Changes
+		WHERE approved_date IS NOT NULL AND applied_date IS NULL
+	`
+	const { results } =  await db.prepare(sql).all<DbOntologyChange>()
+	const pending_changes = results.map(transform)
+
+	if (!pending_changes.length) {
+		return {
+			count: 0,
+			failed: 0,
+			version: await get_version(db),
+		}
+	}
+
+	const version = await get_next_version(db)
+	const applied_date = new Date().toISOString()
+
+	let count = 0
+	let failed = 0
+
+	for (const change of pending_changes) {
+		try {
+			if (change.action === 'create') {
+				const create_data: ConceptCreateData = {
+					...change.concept,
+					level: change.data.level?.value ?? '0',
+					gloss: change.data.gloss?.value ?? '',
+					brief_gloss: change.data.brief_gloss?.value ?? '',
+					categories: change.data.categories?.value ?? default_categories[change.concept.part_of_speech],
+					curated_examples: change.data.curated_examples?.value ?? '',
+				}
+				await create_concept(db, create_data)
+
+			} else {
+				const current_data = (await get_concept_for_update(db, change.concept))!
+				const update_data: ConceptUpdateData = {
+					...change.concept,
+					level: change.data.level?.value ?? current_data.level,
+					gloss: change.data.gloss?.value ?? current_data.gloss,
+					brief_gloss: change.data.brief_gloss?.value ?? current_data.brief_gloss,
+					categories: change.data.categories?.value ?? current_data.categories,
+					curated_examples: change.data.curated_examples?.value ?? current_data.curated_examples,
+				}
+				await update_concept(db, update_data)
+			}
+
+			const sql = `
+				UPDATE Changes
+				SET applied_date = ?, version = ?
+				WHERE id = ?
+			`
+			await db.prepare(sql).bind(applied_date, version, change.id).run()
+			count++
+
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : String(err)
+			console.error(`Failed to apply change ${change.id}: ${message}`)
+
+			const sql = `
+				UPDATE Changes
+				SET version = ?
+				WHERE id = ?
+			`
+			await db.prepare(sql).bind('Failed', change.id).run()
+			failed++
+		}
+	}
+
+	if (count > 0) {
+		await update_version(db, version)
+	}
+
+	return {
+		count,
+		failed,
+		version,
+	}
+}
+
+async function get_next_version(db: D1Database): Promise<string> {
+	// TODO once changes are fully supported, simply get the current version from the 'Version' table
+	const sql = `
+		SELECT version
+		FROM Changes
+		WHERE version IS NOT NULL
+		ORDER BY applied_date DESC
+	`
+	const version_from_changes = await db.prepare(sql).first<string>('version')
+	const current_version = version_from_changes || await get_version(db)
+
+	const parts = current_version.split('.').map(Number)
+
+	if (parts[2] < 9999) {
+		parts[2]++
+	} else if (parts[1] < 9999) {
+		parts[2] = 0
+		parts[1]++
+	} else {
+		parts[2] = 0
+		parts[1] = 0
+		parts[0]++
+	}
+
+	// TODO once changes are fully supported, also save within the 'Version' table
+	return parts.join('.')
+}
+
+
+async function update_version(db: D1Database, version: string) {
+	// TODO once changes are fully supported, actually save within the 'Version' table
+	// await db.prepare('UPDATE Version SET version = ?').bind(version).run()
 }
