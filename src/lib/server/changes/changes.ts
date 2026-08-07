@@ -8,7 +8,18 @@ export async function get_all_changes(db: D1Database): Promise<OntologyChange[]>
 	const sql = `
 		SELECT *
 		FROM Changes
-		ORDER BY approved_date DESC
+		ORDER BY applied_date DESC NULLS FIRST, approved_date DESC NULLS FIRST
+	`
+	const { results } =  await db.prepare(sql).all<DbOntologyChange>()
+	return results.map(transform)
+}
+
+export async function get_pending_changes(db: D1Database): Promise<OntologyChange[]> {
+	const sql = `
+		SELECT *
+		FROM Changes
+		WHERE applied_date IS NULL
+		ORDER BY approved_date DESC NULLS FIRST, suggested_date DESC
 	`
 	const { results } =  await db.prepare(sql).all<DbOntologyChange>()
 	return results.map(transform)
@@ -71,16 +82,6 @@ export async function record_update_concept(db: D1Database, update_data: Concept
 	const fields: (keyof OntologyChangeDataFields)[] = ['level', 'gloss', 'brief_gloss', 'categories', 'curated_examples']
 	const change_data: OntologyChangeDataFields = Object.fromEntries(fields.flatMap(field => {
 		return old[field].toString() !== update_data[field].toString() ? [[field, { old: old[field], value: update_data[field] }]] : []
-		// const old_value = old[field]
-		// const new_value = update_data[field]
-
-		// if (Array.isArray(new_value) && Array.isArray(old_value)) {
-		// 	const old_parts = old_value.filter((ov, i) => ov !== new_value[i])
-		// 	const new_parts = new_value.filter((nv, i) => nv !== old_value[i])
-		// 	return new_parts.length > 0 ? [[field, { old: old_parts, value: new_parts }]] : []
-		// }
-
-		// return old_value !== new_value ? [[field, { old: old_value, value: new_value }]] : []
 	}))
 
 	await db.prepare(sql)

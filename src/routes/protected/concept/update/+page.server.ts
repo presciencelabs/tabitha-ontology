@@ -1,7 +1,7 @@
 import { is_authorized } from '$lib/server/auth'
 import { record_update_concept } from '$lib/server/changes/changes'
 import { get_concept_for_update } from '$lib/server/changes/concepts.js'
-import { error } from '@sveltejs/kit'
+import { error, redirect } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url: { searchParams }, locals }) {
@@ -42,7 +42,8 @@ export const actions = {
 
 		await record_update_concept(locals.db_ontology, data, locals.user!)
 
-		return { success: true }
+		// Redirect to the changes page because the change isn't actually reflected in Concepts yet
+		redirect(303, `/protected/changes?status=pending`)
 	},
 }
 

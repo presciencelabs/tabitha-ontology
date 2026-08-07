@@ -7,6 +7,7 @@
 
 	let { data, form }: PageProps = $props()
 
+	// svelte-ignore state_referenced_locally
 	let concept_data = $state(data.concept_data)
 	let initial_data = $state.snapshot(concept_data)
 	let is_dirty = $derived(!deep_equal(concept_data, initial_data))

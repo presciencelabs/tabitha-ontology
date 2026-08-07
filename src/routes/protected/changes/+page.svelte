@@ -3,7 +3,7 @@
 
 	let { data }: PageProps = $props()
 
-	let changes = $derived(data.change_history)
+	let changes = $derived(data.changes)
 
 	function categories_display(value: string[], old: string[] | undefined) {
 		if (!old) {
@@ -22,7 +22,7 @@
 
 <div class="pt-5 w-full">
 	<div class="prose">
-		<h3>Change History</h3>
+		<h3>Changes</h3>
 	</div>
 	{#if changes.length > 0}
 		<table class="table w-full">

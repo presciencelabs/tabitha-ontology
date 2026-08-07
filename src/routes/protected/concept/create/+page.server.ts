@@ -50,6 +50,7 @@ export const actions = {
 
 		await record_create_concept(locals.db_ontology, data, locals.user!)
 
-		redirect(303, `/?q=${encodeURIComponent(data.stem)}`)
+		// Redirect to the changes page because the change isn't actually reflected in Concepts yet
+		redirect(303, `/protected/changes?status=pending`)
 	},
 }
