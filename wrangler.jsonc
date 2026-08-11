@@ -10,6 +10,8 @@
 		"binding": "ASSETS",
 		"directory": ".svelte-kit/cloudflare"
 	},
+	"workers_dev": true,
+	"preview_urls": true,
 	"observability": {
 		"enabled": true,
 		"head_sampling_rate": 1
@@ -23,6 +25,12 @@
 			"0 */12 * * *" // every 12 hours, 00:00 UTC and 12:00 UTC
 		]
 	},
+	"routes": [
+		{
+			"pattern": "ontology.tabitha.bible",
+			"custom_domain": true
+		}
+	],
 	"d1_databases": [
 		{
 			"binding": "DB_Ontology",
