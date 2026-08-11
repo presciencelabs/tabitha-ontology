@@ -70,7 +70,7 @@ export async function record_create_concept(db: D1Database, create_data: Concept
 	const change_data: OntologyChangeDataFields = {
 		level: { value: level },
 		gloss: { value: gloss },
-		...(brief_gloss ? { brief_gloss: { value: brief_gloss } } : {}),
+		...brief_gloss ? { brief_gloss: { value: brief_gloss } } : {},
 		categories: { value: categories },
 	}
 
@@ -207,9 +207,7 @@ export async function apply_pending_changes(db: D1Database): Promise<{ count: nu
 		}
 	}
 
-	if (count > 0) {
-		await update_version(db, version)
-	}
+	// TODO once changes are fully supported, actually save the new version within the 'Version' table
 
 	return {
 		count,
@@ -242,12 +240,5 @@ async function get_next_version(db: D1Database): Promise<string> {
 		parts[0]++
 	}
 
-	// TODO once changes are fully supported, also save within the 'Version' table
 	return parts.join('.')
-}
-
-
-async function update_version(db: D1Database, version: string) {
-	// TODO once changes are fully supported, actually save within the 'Version' table
-	// await db.prepare('UPDATE Version SET version = ?').bind(version).run()
 }

@@ -43,7 +43,7 @@ export const actions = {
 		await record_update_concept(locals.db_ontology, data, locals.user!)
 
 		// Redirect to the changes page because the change isn't actually reflected in Concepts yet
-		redirect(303, `/protected/changes?status=pending`)
+		redirect(303, '/protected/changes?status=pending')
 	},
 }
 
