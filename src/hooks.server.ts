@@ -40,6 +40,19 @@ async function initialize_config(event: RequestEvent) {
 	const clientSecret = event.platform?.env.GOOGLE_OAUTH_CLIENT_SECRET || GOOGLE_OAUTH_CLIENT_SECRET
 	const secret = event.platform?.env.AUTH_SECRET || AUTH_SECRET
 
+	/**
+	 * GOOGLE OAUTH REDIRECT PROXY FOR PREVIEW ENVIRONMENTS:
+	 * Google OAuth 2.0 strictly disallows wildcards in Authorized Redirect URIs (RFC 6749 security restriction).
+	 * Cloudflare Workers generates dynamic subdomains for branch preview deployments (e.g. `*-ontology.tbta.workers.dev`).
+	 *
+	 * When running on any dynamic `.workers.dev` preview hostname, `redirectProxyUrl` instructs Auth.js to route the
+	 * Google OAuth callback through the canonical production domain (`https://ontology.tabitha.bible/auth`).
+	 * After authentication completes on `ontology.tabitha.bible`, Auth.js forwards the session state back to the
+	 * calling preview domain seamlessly. This eliminates the need to manually update Google Cloud Console URIs per branch.
+	 */
+	const is_preview_worker = event.url.hostname.endsWith('.workers.dev')
+	const redirectProxyUrl = is_preview_worker ? 'https://ontology.tabitha.bible/auth' : undefined
+
 	return {
 		providers: [
 			Google({ clientId, clientSecret }),
@@ -47,6 +60,7 @@ async function initialize_config(event: RequestEvent) {
 
 		secret,
 		trustHost: true,
+		...redirectProxyUrl ? { redirectProxyUrl } : {},
 	}
 }
 
