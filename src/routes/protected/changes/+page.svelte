@@ -130,7 +130,6 @@
 						{#if change.approved_by}
 							<div class="flex flex-col gap-0.5">
 								<span>{change.approved_by.date.toLocaleString()}</span>
-								<!-- TODO: Show user name instead of email once user profile data is tracked in Changes -->
 								<span class="text-xs opacity-75 font-mono">{change.approved_by.email}</span>
 							</div>
 						{/if}
