@@ -68,38 +68,38 @@ export const context_argument_map: ContextArgumentMap = new Map([
 /**
  * Example data:
  * ______________________________________________
- * | Name			| Options 							|
- * | ------------	| --------------------------- |
+ * | Name			| Options 						|
+ * | ------------	| ---------------------------	|
  * | Book			| Genesis, Exodus, ...			|
  *
  *    ============= person-B ================
- * | Verb			| 'tell-D', 'send-A', ...		|
+ * | Verb			| 'tell-D', 'send-A', ...	|
  * | Role			| 'agent-A', 'state-A', ...	|
  *
  *    ============= person-A ================
- * | Verb			| ...									|
- * | Role			| ...									|
- * | Adposition	| ...									|
- * | Outer Nouns	| ...									|
+ * | Verb			| ...					|
+ * | Role			| ...					|
+ * | Adposition		| ...					|
+ * | Outer Nouns	| ...					|
  *
  *    ============= sleep-A ================
- * | Topic NP		| 'Most Agent-Like'				|
+ * | Topic NP		| 'Most Agent-Like'			|
  * | Polarity		| 'Affirmative', 'Negative'	|
- * | Agent			| ...									|
- * | Addressee		| ...									|
+ * | Agent			| ...						|
+ * | Addressee		| ...						|
  *
  *    ============= speak-A ================
- * | Topic NP		| ...				|
+ * | Topic NP		| ...						|
  * | Polarity		| 'Affirmative', 'Negative'	|
- * | Agent			| ...									|
- * | Patient		| ...									|
- * | ...				| ...									|
+ * | Agent			| ...						|
+ * | Patient		| ...						|
+ * | ...			| ...						|
  *
  *    ============= speak-B ================
- * | Topic NP		| 'Most Agent-Like'				|
- * | Polarity		| 'Affirmative'					|
- * | Agent			| ...									|
- * | Patient		| ...									|
+ * | Topic NP		| 'Most Agent-Like'			|
+ * | Polarity		| 'Affirmative'				|
+ * | Agent			| ...						|
+ * | Patient		| ...						|
  */
 export function derive_filters(concept: Concept, examples: Example[]): FilterMap {
 	const filters: FilterMap = new Map()

@@ -4,17 +4,17 @@ import type { Book, PartOfSpeech } from '$lib/types'
 // DisplayOntologyDlg.cppL1010
 //
 // The letters are irrelevant, the position and case are what matters:
-//		| position 	| meaning 						|
-//		| -------- 	| -------------------------|
-//		| 0 (Aa)		| Agent-like 					|
-//		| 1 (Bb)		| Patient-like 				|
-//		| 2 (Cc)		| State 							|
-//		| 3 (Dd)		| Source 						|
-//		| 4 (Ee)		| Destination 					|
-//		| 5 (Ff)		| Instrument 					|
-//		| 6 (Gg)		| Beneficiary 					|
-//		| 7 (Hh)		| Patient proposition 		|
-//		| 8 (Ii)		| Agent proposition	|
+//		| position 	| meaning				|
+//		| -------- 	| ---------------------	|
+//		| 0 (Aa)	| Agent-like 			|
+//		| 1 (Bb)	| Patient-like 			|
+//		| 2 (Cc)	| State 				|
+//		| 3 (Dd)	| Source 				|
+//		| 4 (Ee)	| Destination 			|
+//		| 5 (Ff)	| Instrument 			|
+//		| 6 (Gg)	| Beneficiary 			|
+//		| 7 (Hh)	| Patient proposition 	|
+//		| 8 (Ii)	| Agent proposition		|
 //
 // Uppercase means required, lowercase means optional and an underscore('_') in any position means not applicable.
 const required: Record<string, string> = {
@@ -54,20 +54,20 @@ export const semantic_category: Partial<Record<PartOfSpeech, Record<string, stri
 	//
 	// [Aa_][Bb_][Cc_][Dd_][Ee_][Ff_]
 	//
-	// 	| position 	| usage info 																		|
-	//		| ---------	| ---------------------------------------------------------------	|
-	//		| 2			| used attributively 															|
-	//		| 3			| used predicately without an argument 									|
-	//		| 4			| used predicately with a nominal argument 								|
-	//		| 5			| used predicately with a same participant clausal argument 		|
-	//		| 6			| used predicately with a different participant clausal argument 	|
-	//		| 7			| used comparatively 															|
+	// 	| position 	| usage info 														|
+	//	| ---------	| ---------------------------------------------------------------	|
+	//	| 2			| used attributively 												|
+	//	| 3			| used predicately without an argument 								|
+	//	| 4			| used predicately with a nominal argument 							|
+	//	| 5			| used predicately with a same participant clausal argument 		|
+	//	| 6			| used predicately with a different participant clausal argument	|
+	//	| 7			| used comparatively 												|
 	//
-	//		| case		| when		|
-	//		| ---------	| ---------	|
-	//		| upper		| always		|
-	//		| lower		| sometimes	|
-	//		| _			| never		|
+	//	| case	| when		|
+	//	| -----	| ---------	|
+	//	| upper	| always	|
+	//	| lower	| sometimes	|
+	//	| _		| never		|
 	Adjective: {
 		G: 'Generic',
 		C: 'Cardinal number',
@@ -82,16 +82,16 @@ export const semantic_category: Partial<Record<PartOfSpeech, Record<string, stri
 	// SemanticDomainNamesDlg.cpp::LoadConceptCategories (comment on line ~504)
 	// Ontology.mdb:Features_Source.FeatureValues
 	//
-	// | letter | meaning 				|
-	// | ------ | ------------------ |
-	// | A 		| Abstracts 			|
-	// | F 		| Feminine names 		|
-	// | G 		| Geographical names |
+	// | letter	| meaning 			|
+	// | ------	| ----------------	|
+	// | A 		| Abstracts 		|
+	// | F 		| Feminine names 	|
+	// | G 		| Geographical names|
 	// | M 		| Masculine names 	|
 	// | O 		| Ordinal numbers 	|
-	// | T 		| Temporal names 		|
-	// | g 		| Other proper names |
-	// | o 		| All other objects 	|
+	// | T 		| Temporal names 	|
+	// | g 		| Other proper names|
+	// | o 		| All other objects |
 	Noun: {
 		A: 'Abstracts',
 		F: 'Feminine names',
@@ -249,12 +249,12 @@ const community_development_text_books: Book = {
  * Map lookup for the source and book of a reference.
  *
  * As of Nov 2023, the Ontology data looked like this:
- * | source | count 	|
- * |--------|--------|
- * |	3		|	6		| "Missions Documents"
- * |	4		|	1087	| "Bible"
- * |	6		|	57		| "Grammar Introduction"
- * |	7		|	75		| "Community Development Texts"
+ * | source	| count	|
+ * | ------	| -----	|
+ * | 3		| 6		| "Missions Documents"
+ * | 4		| 1087	| "Bible"
+ * | 6		| 57	| "Grammar Introduction"
+ * | 7		| 75	| "Community Development Texts"
  *
  * ReferenceUtils.cpp CReferenceUtils::GetSourceTextName
  */
@@ -277,7 +277,7 @@ export const levels: Map<string, string> = new Map([
 	['4', 'Inexplicable'],
 ])
 
-export const parts_of_speech = ['Noun', 'Verb', 'Adjective', 'Adverb', 'Adposition', 'Conjunction', 'Particle', 'Phrasal'] as const
+export const parts_of_speech: PartOfSpeech[] = ['Noun', 'Verb', 'Adjective', 'Adverb', 'Adposition', 'Conjunction', 'Particle', 'Phrasal']
 
 export const curated_example_category_codes: Record<string, string> = {
 	'(NP': 'NP',
