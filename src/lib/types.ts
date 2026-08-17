@@ -19,7 +19,7 @@ export type OntologyStatus =
 export type ConceptKey = {
 	stem: string
 	sense: string
-	part_of_speech: string
+	part_of_speech: PartOfSpeech
 }
 
 export type DbRowConcept = ConceptKey & {
