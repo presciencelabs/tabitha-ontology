@@ -128,9 +128,10 @@
 					</td>
 					<td>
 						{#if change.approved_by}
-							{change.approved_by.date.toLocaleString()}
-							<!--TODO Show the user name instead, and don't show unless they're authenticated-->
-							({change.approved_by.email})
+							<div class="flex flex-col gap-0.5">
+								<span>{change.approved_by.date.toLocaleString()}</span>
+								<span class="text-xs opacity-75 font-mono">{change.approved_by.email}</span>
+							</div>
 						{/if}
 					</td>
 					<td>
